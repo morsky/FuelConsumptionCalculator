@@ -1,3 +1,3 @@
-export function calculateConsumption(a, b) {
-  return (b * 100) / a;
+export function calculateConsumption({ kilometers, liters }) {
+  return (liters * 100) / kilometers;
 }
