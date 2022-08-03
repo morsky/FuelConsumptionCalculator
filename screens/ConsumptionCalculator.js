@@ -4,7 +4,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import Button from "../components/UI/Button";
 
 import { calculateConsumption } from "../util/calculations";
-import { GlobalStyles } from "../constants/styles";
+import { Colors } from "../constants/colors";
 
 function ConsumptionCalculator() {
   const [inputs, setInputs] = useState({
@@ -72,7 +72,7 @@ function ConsumptionCalculator() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Text
           style={[
@@ -83,7 +83,10 @@ function ConsumptionCalculator() {
           Enter kilometers:
         </Text>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            !inputs.kilometers.isValid && styles.invalidInput,
+          ]}
           onChangeText={inputChangedHandler.bind(this, "kilometers")}
           placeholder="0"
           keyboardType="numeric"
@@ -98,7 +101,7 @@ function ConsumptionCalculator() {
           Enter liters:
         </Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !inputs.liters.isValid && styles.invalidInput]}
           onChangeText={inputChangedHandler.bind(this, "liters")}
           placeholder="0"
           keyboardType="numeric"
@@ -134,49 +137,52 @@ function ConsumptionCalculator() {
 export default ConsumptionCalculator;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.yellow100,
+    paddingTop: 40,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 4,
-    marginVertical: 8,
-    // backgroundColor: "yellow",
-    // width: "80%",
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   label: {
     fontSize: 18,
     fontWeight: "bold",
-
-    // color: GlobalStyles.colors.primary100,
-    // marginBottom: 4,
+    color: Colors.gray700,
   },
   input: {
-    // backgroundColor: GlobalStyles.colors.primary100,
-    // color: GlobalStyles.colors.primary700,
     borderRadius: 6,
     borderWidth: 2,
+    borderColor: Colors.gray100,
+    backgroundColor: Colors.yellow50,
+    color: Colors.gray700,
     fontSize: 18,
+    fontWeight: "bold",
     textAlign: "right",
     padding: 6,
-    // marginRight: "20%",
+    marginRight: 20,
     minWidth: 120,
   },
   errorText: {
     textAlign: "center",
-    color: GlobalStyles.colors.error500,
+    color: Colors.error200,
     margin: 8,
   },
   invalidLabel: {
-    color: GlobalStyles.colors.error500,
+    color: Colors.error200,
   },
   invalidInput: {
-    backgroundColor: GlobalStyles.colors.error50,
+    backgroundColor: Colors.error50,
+    borderColor: Colors.error300,
   },
   buttons: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "green",
     marginTop: 20,
   },
   button: {
@@ -184,7 +190,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   resultContainer: {
-    // flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,

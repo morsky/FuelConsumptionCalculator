@@ -4,7 +4,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import Button from "../components/UI/Button";
 
 import { calculatePricePerPerson } from "../util/calculations";
-import { GlobalStyles } from "../constants/styles";
+import { Colors } from "../constants/colors";
 
 function SplitBill() {
   const [inputs, setInputs] = useState({
@@ -71,7 +71,7 @@ function SplitBill() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Text
           style={[styles.label, !inputs.cost.isValid && styles.invalidLabel]}
@@ -79,7 +79,7 @@ function SplitBill() {
           Enter cost:
         </Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !inputs.cost.isValid && styles.invalidInput]}
           onChangeText={inputChangedHandler.bind(this, "cost")}
           placeholder="0"
           keyboardType="numeric"
@@ -94,7 +94,7 @@ function SplitBill() {
           Enter persons:
         </Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !inputs.persons.isValid && styles.invalidInput]}
           onChangeText={inputChangedHandler.bind(this, "persons")}
           placeholder="0"
           keyboardType="numeric"
@@ -130,35 +130,46 @@ function SplitBill() {
 export default SplitBill;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.green100,
+    paddingTop: 40,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 4,
-    marginVertical: 8,
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   label: {
     fontSize: 18,
     fontWeight: "bold",
+    color: Colors.gray700,
   },
   input: {
     borderRadius: 6,
     borderWidth: 2,
+    borderColor: Colors.gray100,
+    backgroundColor: Colors.yellow50,
+    color: Colors.gray700,
     fontSize: 18,
     textAlign: "right",
     padding: 6,
+    marginRight: 20,
     minWidth: 120,
   },
   errorText: {
     textAlign: "center",
-    color: GlobalStyles.colors.error500,
+    color: Colors.error200,
     margin: 8,
   },
   invalidLabel: {
-    color: GlobalStyles.colors.error500,
+    color: Colors.error200,
   },
   invalidInput: {
-    backgroundColor: GlobalStyles.colors.error50,
+    backgroundColor: Colors.error50,
+    borderColor: Colors.error300,
   },
   buttons: {
     flexDirection: "row",

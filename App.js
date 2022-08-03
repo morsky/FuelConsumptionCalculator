@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import ConsumptionCalculator from "./screens/ConsumptionCalculator";
 import SplitBill from "./screens/SplitBill";
 
+import { Colors } from "./constants/colors";
+
 const BottomTabs = createBottomTabNavigator();
 
 export default function App() {
@@ -18,8 +20,15 @@ export default function App() {
       <NavigationContainer>
         <BottomTabs.Navigator
           screenOptions={{
-            tabBarStyle: { height: 60 },
+            tabBarStyle: {
+              height: 60,
+              borderTopColor: Colors.gray100,
+              borderTopWidth: 2,
+              backgroundColor: Colors.gray50,
+            },
             tabBarShowLabel: false,
+            headerStyle: { backgroundColor: Colors.gray50 },
+            headerTintColor: Colors.gray700,
           }}
         >
           <BottomTabs.Screen
