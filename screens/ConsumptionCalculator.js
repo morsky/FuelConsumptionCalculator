@@ -134,13 +134,18 @@ function ConsumptionCalculator({ navigation }) {
       </View>
 
       <View style={styles.buttons}>
-        <Button
-          onPress={() =>
-            navigation.navigate("SaveConsumption", { value: fuelConsumption })
-          }
-        >
-          Save Vlue
-        </Button>
+        {!fuelConsumption ||
+          (!invalidFields && (
+            <Button
+              onPress={() =>
+                navigation.navigate("SaveConsumption", {
+                  value: fuelConsumption,
+                })
+              }
+            >
+              Save Vlue
+            </Button>
+          ))}
       </View>
     </View>
   );

@@ -96,7 +96,11 @@ export default function App() {
             component={CalculatorOverview}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="SaveConsumption" component={SaveConsumption} />
+          <Stack.Screen
+            name="SaveConsumption"
+            component={SaveConsumption}
+            options={{ title: "Save Consumption" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

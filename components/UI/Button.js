@@ -1,9 +1,14 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 
-function Button({ children, onPress }) {
+function Button({ children, onPress, disabled }) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.button,
+        pressed && styles.pressed,
+        disabled && styles.disabled,
+      ]}
+      disabled={disabled}
       onPress={onPress}
     >
       <Text style={styles.text}>{children}</Text>
@@ -30,5 +35,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "white",
+  },
+  disabled: {
+    opacity: 0.7,
   },
 });
