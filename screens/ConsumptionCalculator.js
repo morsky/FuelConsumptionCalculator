@@ -133,7 +133,7 @@ function ConsumptionCalculator({ navigation }) {
         </Text>
       </View>
 
-      <View>
+      <View style={styles.buttons}>
         <Button
           onPress={() =>
             navigation.navigate("SaveConsumption", { value: fuelConsumption })
