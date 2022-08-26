@@ -6,7 +6,7 @@ import Button from "../components/UI/Button";
 import { calculateConsumption } from "../util/calculations";
 import { Colors } from "../constants/colors";
 
-function ConsumptionCalculator() {
+function ConsumptionCalculator({ navigation }) {
   const [inputs, setInputs] = useState({
     kilometers: {
       value: "",
@@ -109,6 +109,14 @@ function ConsumptionCalculator() {
         />
       </View>
 
+      <View style={styles.errorContainer}>
+        {invalidFields && (
+          <Text style={styles.errorText}>
+            Invalid input values - please check your entered data!
+          </Text>
+        )}
+      </View>
+
       <View style={styles.buttons}>
         <Button style={styles.button} onPress={Clear}>
           Clear
@@ -125,11 +133,15 @@ function ConsumptionCalculator() {
         </Text>
       </View>
 
-      {invalidFields && (
-        <Text style={styles.errorText}>
-          Invalid input values - please check your entered data!
-        </Text>
-      )}
+      <View>
+        <Button
+          onPress={() =>
+            navigation.navigate("SaveConsumption", { value: fuelConsumption })
+          }
+        >
+          Save Vlue
+        </Button>
+      </View>
     </View>
   );
 }
@@ -167,10 +179,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
     minWidth: 120,
   },
+  errorContainer: {
+    height: 30,
+    marginTop: 20,
+  },
   errorText: {
     textAlign: "center",
     color: Colors.error200,
-    margin: 8,
   },
   invalidLabel: {
     color: Colors.error200,

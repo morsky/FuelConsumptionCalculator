@@ -102,6 +102,14 @@ function SplitBill() {
         />
       </View>
 
+      <View style={styles.errorContainer}>
+        {invalidFields && (
+          <Text style={styles.errorText}>
+            Invalid input values - please check your entered data!
+          </Text>
+        )}
+      </View>
+
       <View style={styles.buttons}>
         <Button style={styles.button} onPress={Clear}>
           Clear
@@ -117,12 +125,6 @@ function SplitBill() {
           {fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)}
         </Text>
       </View>
-
-      {invalidFields && (
-        <Text style={styles.errorText}>
-          Invalid input values - please check your entered data!
-        </Text>
-      )}
     </View>
   );
 }
@@ -159,10 +161,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
     minWidth: 120,
   },
+  errorContainer: {
+    height: 30,
+    marginTop: 20,
+  },
   errorText: {
     textAlign: "center",
     color: Colors.error200,
-    margin: 8,
   },
   invalidLabel: {
     color: Colors.error200,

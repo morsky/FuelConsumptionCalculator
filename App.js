@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -10,11 +11,53 @@ import * as SplashScreen from "expo-splash-screen";
 
 import ConsumptionCalculator from "./screens/ConsumptionCalculator";
 import SplitBill from "./screens/SplitBill";
+import SaveConsumption from "./screens/SaveConsumption";
 
 import { Colors } from "./constants/colors";
 
+const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
+
 SplashScreen.preventAutoHideAsync();
+
+function CalculatorOverview() {
+  return (
+    <BottomTabs.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 60,
+          borderTopColor: Colors.gray100,
+          borderTopWidth: 2,
+          backgroundColor: Colors.gray50,
+        },
+        tabBarShowLabel: false,
+        headerStyle: { backgroundColor: Colors.gray50 },
+        headerTintColor: Colors.gray700,
+      }}
+    >
+      <BottomTabs.Screen
+        name="ConsumptionCalculator"
+        component={ConsumptionCalculator}
+        options={{
+          title: "Consumption Calculator",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="calculator" size={36} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name="SplitBill"
+        component={SplitBill}
+        options={{
+          title: "Split Bill",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="people-sharp" size={36} color={color} />
+          ),
+        }}
+      />
+    </BottomTabs.Navigator>
+  );
+}
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -47,38 +90,14 @@ export default function App() {
       <StatusBar style="auto" />
 
       <NavigationContainer>
-        <BottomTabs.Navigator
-          screenOptions={{
-            tabBarStyle: {
-              height: 60,
-              borderTopColor: Colors.gray100,
-              borderTopWidth: 2,
-              backgroundColor: Colors.gray50,
-            },
-            tabBarShowLabel: false,
-            headerStyle: { backgroundColor: Colors.gray50 },
-            headerTintColor: Colors.gray700,
-          }}
-        >
-          <BottomTabs.Screen
-            name="Consumption Calculator"
-            component={ConsumptionCalculator}
-            options={{
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="calculator" size={36} color={color} />
-              ),
-            }}
+        <Stack.Navigator>
+          <Stack.Screen
+            name="CalculatorOverview"
+            component={CalculatorOverview}
+            options={{ headerShown: false }}
           />
-          <BottomTabs.Screen
-            name="Split Bill"
-            component={SplitBill}
-            options={{
-              tabBarIcon: ({ color }) => (
-                <Ionicons name="people-sharp" size={36} color={color} />
-              ),
-            }}
-          />
-        </BottomTabs.Navigator>
+          <Stack.Screen name="SaveConsumption" component={SaveConsumption} />
+        </Stack.Navigator>
       </NavigationContainer>
     </>
   );
