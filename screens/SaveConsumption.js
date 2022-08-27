@@ -1,10 +1,12 @@
 import { useState } from "react";
 
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import DropDownPicker from "react-native-dropdown-picker";
 
 import Button from "../components/UI/Button";
+
+import { Colors } from "../constants/colors";
 
 function SaveConsumption({ navigation, route }) {
   const consumptionValue = route.params.value;
@@ -17,7 +19,30 @@ function SaveConsumption({ navigation, route }) {
   ]);
 
   function Save() {
-    const item = { vehicle: value, consumption: consumptionValue };
+    const currentDate = new Date();
+    const dateTime = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${currentDate
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${currentDate
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${currentDate
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}.${currentDate.getMilliseconds()}`;
+
+    const item = {
+      vehicle: value,
+      consumption: consumptionValue,
+      date: dateTime,
+    };
 
     console.log(item);
   }
@@ -30,21 +55,23 @@ function SaveConsumption({ navigation, route }) {
         </Text>
       </View>
 
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-        textStyle={{
-          fontSize: 20,
-        }}
-        labelStyle={{
-          fontWeight: "bold",
-        }}
-        placeholder="Select a vehicle"
-      />
+      <View style={styles.dropDownContainer}>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          textStyle={{
+            fontSize: 20,
+          }}
+          labelStyle={{
+            fontWeight: "bold",
+          }}
+          placeholder="Select a vehicle"
+        />
+      </View>
 
       <View style={styles.buttonContainer}>
         <Button onPress={() => navigation.goBack()}>Cancel</Button>
@@ -63,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: "center",
     justifyContent: "center",
-    marginHorizontal: 40,
+    backgroundColor: Colors.yellow100,
   },
   textContainer: {
     alignItems: "center",
@@ -71,6 +98,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
+  },
+  dropDownContainer: {
+    marginHorizontal: 40,
   },
   buttonContainer: {
     flexDirection: "row",

@@ -90,7 +90,18 @@ export default function App() {
       <StatusBar style="auto" />
 
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            tabBarStyle: {
+              height: 60,
+              borderTopColor: Colors.gray100,
+              borderTopWidth: 2,
+              backgroundColor: Colors.gray50,
+            },
+            headerStyle: { backgroundColor: Colors.gray50 },
+            headerTintColor: Colors.gray700,
+          }}
+        >
           <Stack.Screen
             name="CalculatorOverview"
             component={CalculatorOverview}
