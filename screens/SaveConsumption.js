@@ -9,12 +9,19 @@ import Button from "../components/UI/Button";
 import { Colors } from "../constants/colors";
 import { Vehicle } from "../models/vehicle";
 import { getVehicleNames, insertVehicleData } from "../util/database";
+import { formatDate } from "../util/datetime";
 
 function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
+
   const consumptionValue = route.params.value;
+  const defaultValues = [
+    { label: "Car", value: "Car" },
+    { label: "Motorbike", value: "Motorbike" },
+    { label: "Truck", value: "Truck" },
+  ];
 
   useEffect(() => {
     async function loadItems() {
@@ -26,40 +33,17 @@ function SaveConsumption({ navigation, route }) {
     loadItems();
   }, []);
 
-  if (items.length === 0 || items.length < 2) {
-    const defaultValues = [
-      { label: "Car", value: "Car" },
-      { label: "Motorbike", value: "Motorbike" },
-    ];
-
+  if (items.length === 0 || items.length < defaultValues.length) {
     setItems(defaultValues);
   }
 
   function Save() {
-    const currentDate = new Date();
-    const dateTime = `${currentDate.getFullYear()}-${(
-      currentDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${currentDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${currentDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${currentDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${currentDate
-      .getSeconds()
-      .toString()
-      .padStart(2, "0")}.${currentDate.getMilliseconds()}`;
-
+    const dateTime = formatDate(new Date());
     const item = new Vehicle(value, consumptionValue, dateTime);
 
-    console.log(item);
-
     insertVehicleData(item);
+
+    console.log(item);
 
     navigation.goBack();
   }
