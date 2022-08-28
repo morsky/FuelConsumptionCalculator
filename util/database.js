@@ -73,6 +73,27 @@ export function getVehicleNames() {
   return promise;
 }
 
+export function updateVehicleName(oldName, newName) {
+  const promise = new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE fuel_consumption SET name = (?) WHERE name LIKE (?)`,
+        [newName, oldName],
+        (_, result) => {
+          console.log(result);
+
+          resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+
+  return promise;
+}
+
 export function deleteVehicle(name) {
   const promise = new Promise((resolve, reject) => {
     database.transaction((tx) => {

@@ -62,7 +62,7 @@ function SplitBill() {
 
   const invalidFields = !inputs.cost.isValid || !inputs.persons.isValid;
 
-  function Clear() {
+  function clear() {
     setInputs({
       cost: { value: "", isValid: true },
       persons: { value: "", isValid: true },
@@ -111,7 +111,7 @@ function SplitBill() {
       </View>
 
       <View style={styles.buttons}>
-        <Button style={styles.button} onPress={Clear}>
+        <Button style={styles.button} onPress={clear}>
           Clear
         </Button>
         <Button style={styles.button} onPress={calculateHandler}>

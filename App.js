@@ -13,6 +13,7 @@ import ConsumptionCalculator from "./screens/ConsumptionCalculator";
 import SplitBill from "./screens/SplitBill";
 import SaveConsumption from "./screens/SaveConsumption";
 import ListDropdownItems from "./screens/ListDropdownItems";
+import EditDropdownItem from "./screens/EditDropdownItem";
 
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
@@ -119,6 +120,11 @@ export default function App() {
             name="ListDropdownItems"
             component={ListDropdownItems}
             options={{ title: "List Dropdown Items" }}
+          />
+          <Stack.Screen
+            name="EditDropdownItem"
+            component={EditDropdownItem}
+            options={{ title: "Edit Dropdown Item" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

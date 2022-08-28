@@ -143,7 +143,7 @@ function ConsumptionCalculator({ navigation }) {
                 })
               }
             >
-              Save Vlue
+              Save Value
             </Button>
           ))}
       </View>

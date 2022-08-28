@@ -9,6 +9,11 @@ import Button from "../UI/Button";
 function DropdownItem({ item }) {
   const navigation = useNavigation();
 
+  function EditItem() {
+    console.log(item);
+    navigation.navigate("EditDropdownItem", { vehicle: item });
+  }
+
   function DeleteItem() {
     Alert.alert(
       "Delete Confurmation",
@@ -31,7 +36,7 @@ function DropdownItem({ item }) {
       <View style={styles.item}>
         <Text style={styles.text}>{item}</Text>
         <View style={styles.buttonContainer}>
-          <Button>Edit</Button>
+          <Button onPress={EditItem}>Edit</Button>
           <Button onPress={DeleteItem}>Delete</Button>
         </View>
       </View>

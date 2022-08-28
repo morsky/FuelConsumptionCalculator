@@ -17,6 +17,7 @@ function SaveConsumption({ navigation, route }) {
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const consumptionValue = route.params.value;
+  // const vehicleName = route.params.vehicleName;
   const isFocused = useIsFocused();
 
   // const defaultValues = [
@@ -27,26 +28,42 @@ function SaveConsumption({ navigation, route }) {
 
   useEffect(() => {
     async function loadItems() {
-      const items = await getVehicleNames();
-
-      setItems(items);
+      try {
+        const items = await getVehicleNames();
+        setItems(items);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     isFocused && loadItems();
+
+    // if (isFocused && vehicleName) {
+    //   setItems(vehicleName);
+    // } else {
+    //   loadItems();
+    // }
   }, [isFocused]);
 
   // if (items.length === 0 || items.length < defaultValues.length) {
   //   setItems(defaultValues);
   // }
 
-  function Save() {
+  async function save() {
     const dateTime = formatDate(new Date());
     const vehicle = new Vehicle(value, consumptionValue, dateTime);
 
-    insertVehicleData(vehicle);
-
-    navigation.goBack();
+    try {
+      await insertVehicleData(vehicle);
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // function addVehicle() {
+  //   navigation.navigate("EditDropdownItem", { vehicle: "" });
+  // }
 
   return (
     <View style={styles.container}>
@@ -82,11 +99,22 @@ function SaveConsumption({ navigation, route }) {
         >
           Edit
         </Button>
+
+        <Button
+          onPress={() => {
+            navigation.navigate("EditDropdownItem", {
+              vehicle: "",
+              value: consumptionValue,
+            });
+          }}
+        >
+          Add New Vehicle
+        </Button>
       </View>
 
       <View style={styles.buttonContainer}>
         <Button onPress={() => navigation.goBack()}>Cancel</Button>
-        <Button style={styles.button} onPress={Save} disabled={!value}>
+        <Button style={styles.button} onPress={save} disabled={!value}>
           Save
         </Button>
       </View>

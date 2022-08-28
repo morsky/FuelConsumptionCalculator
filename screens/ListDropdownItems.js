@@ -1,18 +1,16 @@
+import { useIsFocused } from "@react-navigation/native";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import DropdownItem from "../components/Dropdown/DropdownItem";
+
 import { Colors } from "../constants/colors";
 
 function ListDropdownItems({ route }) {
+  const itemData = route.params.itemsArray;
+
   function renderDropdownItem(itemData) {
     return <DropdownItem {...itemData} />;
   }
-
-  const itemData = route.params.itemsArray;
-
-  // if (itemData.length === 0) {
-  //   return <Text style={styles.text}>No vehicles found!</Text>;
-  // }
 
   return (
     <View style={styles.container}>
