@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { View, Text, StyleSheet } from "react-native";
 
@@ -7,16 +7,33 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
+import { Vehicle } from "../models/vehicle";
+import { getVehicleNames, insertVehicleData } from "../util/database";
 
 function SaveConsumption({ navigation, route }) {
-  const consumptionValue = route.params.value;
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Car", value: "car" },
-    { label: "Motorbike", value: "motorbike" },
-  ]);
+  const [items, setItems] = useState([]);
+  const consumptionValue = route.params.value;
+
+  useEffect(() => {
+    async function loadItems() {
+      const items = await getVehicleNames();
+
+      setItems(items);
+    }
+
+    loadItems();
+  }, []);
+
+  if (items.length === 0 || items.length < 2) {
+    const defaultValues = [
+      { label: "Car", value: "Car" },
+      { label: "Motorbike", value: "Motorbike" },
+    ];
+
+    setItems(defaultValues);
+  }
 
   function Save() {
     const currentDate = new Date();
@@ -38,13 +55,13 @@ function SaveConsumption({ navigation, route }) {
       .toString()
       .padStart(2, "0")}.${currentDate.getMilliseconds()}`;
 
-    const item = {
-      vehicle: value,
-      consumption: consumptionValue,
-      date: dateTime,
-    };
+    const item = new Vehicle(value, consumptionValue, dateTime);
 
     console.log(item);
+
+    insertVehicleData(item);
+
+    navigation.goBack();
   }
 
   return (

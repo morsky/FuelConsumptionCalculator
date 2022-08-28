@@ -14,6 +14,7 @@ import SplitBill from "./screens/SplitBill";
 import SaveConsumption from "./screens/SaveConsumption";
 
 import { Colors } from "./constants/colors";
+import { init } from "./util/database";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -68,6 +69,7 @@ export default function App() {
         // Artificially delay for two seconds to simulate a slow loading
         // experience. Please remove this if you copy and paste the code!
         await new Promise((resolve) => setTimeout(resolve, 2000));
+        await init();
       } catch (e) {
         console.warn(e);
       } finally {
