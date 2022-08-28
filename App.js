@@ -12,6 +12,7 @@ import * as SplashScreen from "expo-splash-screen";
 import ConsumptionCalculator from "./screens/ConsumptionCalculator";
 import SplitBill from "./screens/SplitBill";
 import SaveConsumption from "./screens/SaveConsumption";
+import ListDropdownItems from "./screens/ListDropdownItems";
 
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
@@ -113,6 +114,11 @@ export default function App() {
             name="SaveConsumption"
             component={SaveConsumption}
             options={{ title: "Save Consumption" }}
+          />
+          <Stack.Screen
+            name="ListDropdownItems"
+            component={ListDropdownItems}
+            options={{ title: "List Dropdown Items" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

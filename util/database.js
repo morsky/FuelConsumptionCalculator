@@ -35,7 +35,7 @@ export function insertVehicleData(vehicle) {
         `INSERT INTO fuel_consumption (name, consumption, date) VALUES (?, ?, ?)`,
         [vehicle.name, vehicle.consumption, vehicle.date],
         (_, result) => {
-          console.log(result);
+          // console.log(result);
           resolve(result);
         },
         (_, error) => {
@@ -62,6 +62,26 @@ export function getVehicleNames() {
           }
 
           resolve(items);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+
+  return promise;
+}
+
+export function deleteVehicle(name) {
+  const promise = new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM fuel_consumption WHERE name LIKE (?)`,
+        [name],
+        (_, result) => {
+          console.log(result);
+          resolve(result);
         },
         (_, error) => {
           reject(error);

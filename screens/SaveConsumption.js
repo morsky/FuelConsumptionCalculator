@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 import { View, Text, StyleSheet } from "react-native";
@@ -15,13 +16,14 @@ function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
-
   const consumptionValue = route.params.value;
-  const defaultValues = [
-    { label: "Car", value: "Car" },
-    { label: "Motorbike", value: "Motorbike" },
-    { label: "Truck", value: "Truck" },
-  ];
+  const isFocused = useIsFocused();
+
+  // const defaultValues = [
+  //   { label: "Car", value: "Car" },
+  //   { label: "Motorbike", value: "Motorbike" },
+  //   { label: "Truck", value: "Truck" },
+  // ];
 
   useEffect(() => {
     async function loadItems() {
@@ -30,20 +32,18 @@ function SaveConsumption({ navigation, route }) {
       setItems(items);
     }
 
-    loadItems();
-  }, []);
+    isFocused && loadItems();
+  }, [isFocused]);
 
-  if (items.length === 0 || items.length < defaultValues.length) {
-    setItems(defaultValues);
-  }
+  // if (items.length === 0 || items.length < defaultValues.length) {
+  //   setItems(defaultValues);
+  // }
 
   function Save() {
     const dateTime = formatDate(new Date());
-    const item = new Vehicle(value, consumptionValue, dateTime);
+    const vehicle = new Vehicle(value, consumptionValue, dateTime);
 
-    insertVehicleData(item);
-
-    console.log(item);
+    insertVehicleData(vehicle);
 
     navigation.goBack();
   }
@@ -72,6 +72,16 @@ function SaveConsumption({ navigation, route }) {
           }}
           placeholder="Select a vehicle"
         />
+
+        <Button
+          onPress={() =>
+            navigation.navigate("ListDropdownItems", {
+              itemsArray: items.flatMap((item) => item.value),
+            })
+          }
+        >
+          Edit
+        </Button>
       </View>
 
       <View style={styles.buttonContainer}>
