@@ -21,10 +21,12 @@ function DropdownItem({ item }) {
       [
         { text: "Cancel" },
         {
-          text: "Delte",
+          text: "Delete",
           onPress: () => {
             deleteVehicle(item);
+            console.log("Deleted item " + item);
             navigation.goBack();
+            // navigation.navigate("ListDropdownItems", { removedItem: item });
           },
         },
       ]

@@ -30,19 +30,17 @@ function SaveConsumption({ navigation, route }) {
     async function loadItems() {
       try {
         const items = await getVehicleNames();
-        setItems(items);
+        const dropdownData = items.map((item) => {
+          return { label: item, value: item };
+        });
+
+        setItems(dropdownData);
       } catch (error) {
         console.log(error);
       }
     }
 
     isFocused && loadItems();
-
-    // if (isFocused && vehicleName) {
-    //   setItems(vehicleName);
-    // } else {
-    //   loadItems();
-    // }
   }, [isFocused]);
 
   // if (items.length === 0 || items.length < defaultValues.length) {

@@ -1,8 +1,6 @@
-import { useIsFocused } from "@react-navigation/native";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import DropdownItem from "../components/Dropdown/DropdownItem";
-
 import { Colors } from "../constants/colors";
 
 function ListDropdownItems({ route }) {

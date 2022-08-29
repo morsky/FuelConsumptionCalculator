@@ -58,7 +58,7 @@ export function getVehicleNames() {
           const items = [];
 
           for (const dp of result.rows._array) {
-            items.push({ label: dp.name, value: dp.name });
+            items.push(dp.name);
           }
 
           resolve(items);
