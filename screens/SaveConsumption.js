@@ -17,19 +17,13 @@ function SaveConsumption({ navigation, route }) {
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const consumptionValue = route.params.value;
-  // const vehicleName = route.params.vehicleName;
   const isFocused = useIsFocused();
-
-  // const defaultValues = [
-  //   { label: "Car", value: "Car" },
-  //   { label: "Motorbike", value: "Motorbike" },
-  //   { label: "Truck", value: "Truck" },
-  // ];
 
   useEffect(() => {
     async function loadItems() {
       try {
         const items = await getVehicleNames();
+
         const dropdownData = items.map((item) => {
           return { label: item, value: item };
         });
@@ -43,10 +37,6 @@ function SaveConsumption({ navigation, route }) {
     isFocused && loadItems();
   }, [isFocused]);
 
-  // if (items.length === 0 || items.length < defaultValues.length) {
-  //   setItems(defaultValues);
-  // }
-
   async function save() {
     const dateTime = formatDate(new Date());
     const vehicle = new Vehicle(value, consumptionValue, dateTime);
@@ -58,10 +48,6 @@ function SaveConsumption({ navigation, route }) {
       console.log(error);
     }
   }
-
-  // function addVehicle() {
-  //   navigation.navigate("EditDropdownItem", { vehicle: "" });
-  // }
 
   return (
     <View style={styles.container}>
@@ -103,6 +89,7 @@ function SaveConsumption({ navigation, route }) {
             navigation.navigate("EditDropdownItem", {
               vehicle: "",
               value: consumptionValue,
+              names: items.flatMap((item) => item.value),
             });
           }}
         >

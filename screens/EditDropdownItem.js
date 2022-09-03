@@ -11,17 +11,56 @@ import { formatDate } from "../util/datetime";
 function EditDropdownItem({ navigation, route }) {
   const oldName = route.params.vehicle;
   const consumption = route.params.value;
-  const [newName, setNewName] = useState(oldName);
+  const allNames = route.params.names;
+  const [inputs, setInputs] = useState({
+    newName: {
+      value: oldName,
+      isValid: true,
+      message: "",
+    },
+  });
 
-  function changeTextHandler(enteredText) {
-    // TODO Check user input
-    setNewName(enteredText);
+  function inputChangedHandler(inputIdentifier, enteredValue) {
+    setInputs((curInputs) => {
+      return {
+        ...curInputs,
+        [inputIdentifier]: { value: enteredValue, isValid: true, message: "" },
+      };
+    });
   }
 
   async function done() {
+    if (inputs.newName.value === "") {
+      setInputs((curInputs) => {
+        return {
+          newName: {
+            value: curInputs.newName.value,
+            isValid: false,
+            message: "Name should not be empty string!",
+          },
+        };
+      });
+
+      return;
+    }
+
+    if (allNames.includes(inputs.newName.value)) {
+      setInputs((curInputs) => {
+        return {
+          newName: {
+            value: curInputs.newName.value,
+            isValid: false,
+            message: "Name already exists! Try another one!",
+          },
+        };
+      });
+
+      return;
+    }
+
     if (oldName === "") {
       const newVehicle = new Vehicle(
-        newName,
+        inputs.newName.value,
         consumption,
         formatDate(new Date())
       );
@@ -33,9 +72,11 @@ function EditDropdownItem({ navigation, route }) {
       }
     } else {
       try {
-        updateVehicleName(oldName, newName);
-        // navigation.goBack();
-        navigation.navigate("ListDropdownItems", { itemsArray: [newName] });
+        updateVehicleName(oldName, inputs.newName.value);
+
+        navigation.navigate("ListDropdownItems", {
+          name: inputs.newName.value,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -46,17 +87,28 @@ function EditDropdownItem({ navigation, route }) {
     navigation.goBack();
   }
 
+  const invalidFields = !inputs.newName.isValid;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
+      <Text style={[styles.text, invalidFields && styles.invalidLabel]}>
         {oldName === "" ? "Type Vehicle Name:" : "Rename Vehicle:"}
       </Text>
 
       <TextInput
-        style={styles.input}
-        onChangeText={changeTextHandler}
-        value={newName}
+        style={[styles.input, invalidFields && styles.invalidInput]}
+        onChangeText={inputChangedHandler.bind(this, "newName")}
+        value={inputs.newName.value}
+        // placeholder="Name"
       />
+
+      <View style={styles.errorContainer}>
+        {invalidFields && (
+          <Text style={[styles.errorText, invalidFields && styles.errorText]}>
+            {inputs.newName.message}
+          </Text>
+        )}
+      </View>
 
       <View style={styles.buttonContainer}>
         <Button onPress={cancel}>Cancel</Button>
@@ -91,6 +143,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
+  },
+  errorContainer: {
+    height: 30,
+    marginTop: 10,
+  },
+  errorText: {
+    textAlign: "center",
+    color: Colors.error200,
+  },
+  invalidLabel: {
+    color: Colors.error200,
+  },
+  invalidInput: {
+    backgroundColor: Colors.error50,
+    borderColor: Colors.error300,
   },
 });

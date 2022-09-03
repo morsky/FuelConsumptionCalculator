@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 
 import { useState, useEffect } from "react";
+import { Provider } from "react-redux";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -17,6 +18,7 @@ import EditDropdownItem from "./screens/EditDropdownItem";
 
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
+import { store } from "./store/store";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -93,41 +95,44 @@ export default function App() {
     <>
       <StatusBar style="auto" />
 
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            tabBarStyle: {
-              height: 60,
-              borderTopColor: Colors.gray100,
-              borderTopWidth: 2,
-              backgroundColor: Colors.gray50,
-            },
-            headerStyle: { backgroundColor: Colors.gray50 },
-            headerTintColor: Colors.gray700,
-          }}
-        >
-          <Stack.Screen
-            name="CalculatorOverview"
-            component={CalculatorOverview}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SaveConsumption"
-            component={SaveConsumption}
-            options={{ title: "Save Consumption" }}
-          />
-          <Stack.Screen
-            name="ListDropdownItems"
-            component={ListDropdownItems}
-            options={{ title: "List Dropdown Items" }}
-          />
-          <Stack.Screen
-            name="EditDropdownItem"
-            component={EditDropdownItem}
-            options={{ title: "Edit Dropdown Item" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              tabBarStyle: {
+                height: 60,
+                borderTopColor: Colors.gray100,
+                borderTopWidth: 2,
+                backgroundColor: Colors.gray50,
+              },
+              headerStyle: { backgroundColor: Colors.gray50 },
+              headerTintColor: Colors.gray700,
+            }}
+          >
+            <Stack.Screen
+              name="CalculatorOverview"
+              component={CalculatorOverview}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="SaveConsumption"
+              component={SaveConsumption}
+              options={{ title: "Save Consumption" }}
+            />
+            <Stack.Screen
+              name="ListDropdownItems"
+              component={ListDropdownItems}
+              options={{ title: "List Dropdown Items" }}
+            />
+            <Stack.Screen
+              name="EditDropdownItem"
+              component={EditDropdownItem}
+              options={{ title: "Edit Dropdown Item" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }
