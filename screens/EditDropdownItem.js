@@ -5,19 +5,21 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
+
 import { Vehicle } from "../models/vehicle";
 
 import { insertVehicleData, updateVehicleName } from "../util/database";
-
 import { formatDate } from "../util/datetime";
 
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { updateVehicle } from "../store/vehicles";
+import { setVehicle } from "../store/vehicleObject";
 
-function EditDropdownItem({ navigation, route }) {
-  const oldName = route.params.vehicle;
-  const consumption = route.params.value;
+function EditDropdownItem({ navigation }) {
+  const vehiche = store.getState().vehiche.vehicle;
+  const oldName = vehiche.name;
+  const consumption = vehiche.consumption;
   const allVehicleNames = store.getState().vehicleNames.vehicles;
   const [inputs, setInputs] = useState({
     newName: {
@@ -74,6 +76,9 @@ function EditDropdownItem({ navigation, route }) {
       );
       try {
         await insertVehicleData(newVehicle);
+
+        dispatch(setVehicle({}));
+
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {
         console.log(error);
@@ -85,6 +90,7 @@ function EditDropdownItem({ navigation, route }) {
         dispatch(
           updateVehicle({ oldValue: oldName, newValue: inputs.newName.value })
         );
+        dispatch(setVehicle({}));
 
         navigation.navigate("ListDropdownItems");
       } catch (error) {
@@ -94,6 +100,7 @@ function EditDropdownItem({ navigation, route }) {
   }
 
   function cancel() {
+    dispatch(setVehicle({}));
     navigation.goBack();
   }
 

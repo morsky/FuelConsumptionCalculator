@@ -3,8 +3,8 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import Button from "../components/UI/Button";
 
-import { calculateConsumption } from "../util/calculations";
 import { Colors } from "../constants/colors";
+import { calculateConsumption } from "../util/calculations";
 
 function ConsumptionCalculator({ navigation }) {
   const [inputs, setInputs] = useState({

@@ -1,21 +1,14 @@
-import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, Alert } from "react-native";
-import { useDispatch } from "react-redux";
-
-import { Colors } from "../../constants/colors";
-import { removeVehicle } from "../../store/vehicles";
-import { deleteVehicle } from "../../util/database";
 
 import Button from "../UI/Button";
 
-function DropdownItem({ item, onDelete, onEdit }) {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
+import { Colors } from "../../constants/colors";
 
+import { deleteVehicle } from "../../util/database";
+
+function DropdownItem({ item, onDelete, onEdit }) {
   function EditItem() {
-    // console.log(item);
     onEdit(item);
-    // navigation.navigate("EditDropdownItem", { vehicle: item });
   }
 
   function DeleteItem() {
@@ -29,8 +22,6 @@ function DropdownItem({ item, onDelete, onEdit }) {
           onPress: () => {
             onDelete(item);
             deleteVehicle(item);
-            // console.log("Deleted item " + item);
-            // dispatch(removeVehicle(item));
           },
         },
       ]

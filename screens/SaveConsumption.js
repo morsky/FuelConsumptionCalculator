@@ -8,12 +8,15 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
+
 import { Vehicle } from "../models/vehicle";
+
 import { getVehicleNames, insertVehicleData } from "../util/database";
 import { formatDate } from "../util/datetime";
 
-import { setVehicles } from "../store/vehicles";
 import { useDispatch } from "react-redux";
+import { setVehicles } from "../store/vehicles";
+import { setVehicle } from "../store/vehicleObject";
 
 function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
@@ -55,6 +58,12 @@ function SaveConsumption({ navigation, route }) {
     }
   }
 
+  function onEdit() {
+    dispatch(setVehicle({ name: "", consumption: consumptionValue }));
+
+    navigation.navigate("ListDropdownItems");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -80,20 +89,7 @@ function SaveConsumption({ navigation, route }) {
           placeholder="Select a vehicle"
         />
 
-        <Button onPress={() => navigation.navigate("ListDropdownItems")}>
-          Edit
-        </Button>
-
-        <Button
-          onPress={() => {
-            navigation.navigate("EditDropdownItem", {
-              vehicle: "",
-              value: consumptionValue,
-            });
-          }}
-        >
-          Add New Vehicle
-        </Button>
+        <Button onPress={onEdit}>Edit</Button>
       </View>
 
       <View style={styles.buttonContainer}>

@@ -5,12 +5,14 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 
 import DropdownItem from "../components/Dropdown/DropdownItem";
+import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
 
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { removeVehicle } from "../store/vehicles";
+import { setVehicle } from "../store/vehicleObject";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
   const [items, setItems] = useState(store.getState().vehicleNames.vehicles);
@@ -22,12 +24,17 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
   }, [isFocused]);
 
   function onEdit(name) {
-    navigation.navigate("EditDropdownItem", { vehicle: name });
+    dispatch(setVehicle({ name: name }));
+    navigation.navigate("EditDropdownItem");
   }
 
   function onDelete(name) {
     dispatch(removeVehicle(name));
     setItems(store.getState().vehicleNames.vehicles);
+  }
+
+  function onAdd() {
+    navigation.navigate("EditDropdownItem");
   }
 
   function renderDropdownItem(itemData) {
@@ -36,7 +43,12 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Dropdown Items:</Text>
+      <View style={styles.header}>
+        <Text style={styles.text}>Dropdown Items:</Text>
+
+        <Button onPress={onAdd}>Add Vehicle</Button>
+      </View>
+
       {items.length === 0 ? (
         <Text style={styles.text}>No vehicles found!</Text>
       ) : (
@@ -57,10 +69,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.yellow100,
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomColor: Colors.gray700,
+    borderBottomWidth: 2,
+    marginHorizontal: 20,
+    marginVertical: 20,
+  },
   text: {
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
+    color: Colors.gray700,
     marginVertical: 20,
-    marginLeft: 20,
   },
 });
