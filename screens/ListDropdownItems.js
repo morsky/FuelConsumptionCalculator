@@ -6,32 +6,28 @@ import { Colors } from "../constants/colors";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function ListDropdownItems({ navigation, route, onEdit, onDelete }) {
-  const [items, setItems] = useState(route.params.itemsArray);
-  const [name, setName] = useState("");
-  const newName = route.params.name;
+import { store } from "../store/store";
+
+import { useDispatch } from "react-redux";
+import { removeVehicle } from "../store/vehicles";
+import { useIsFocused } from "@react-navigation/native";
+
+function ListDropdownItems({ navigation, onEdit, onDelete }) {
+  const [items, setItems] = useState(store.getState().vehicleNames.vehicles);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    function render() {
-      if (newName) {
-        const newItems = items.map((item) => (item === name ? newName : item));
+    isFocused && setItems(store.getState().vehicleNames.vehicles);
+  }, [isFocused]);
 
-        setItems(newItems);
-      }
-    }
-
-    render();
-  }, [newName]);
-
-  function onEdit(item) {
-    setName(item);
-    navigation.navigate("EditDropdownItem", { vehicle: item, names: items });
+  function onEdit(name) {
+    navigation.navigate("EditDropdownItem", { vehicle: name });
   }
 
-  function onDelete(item) {
-    const newData = items.filter((i) => i !== item);
-
-    setItems(newData);
+  function onDelete(name) {
+    dispatch(removeVehicle(name));
+    setItems(store.getState().vehicleNames.vehicles);
   }
 
   function renderDropdownItem(itemData) {

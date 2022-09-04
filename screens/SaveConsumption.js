@@ -12,17 +12,23 @@ import { Vehicle } from "../models/vehicle";
 import { getVehicleNames, insertVehicleData } from "../util/database";
 import { formatDate } from "../util/datetime";
 
+import { setVehicles } from "../store/vehicles";
+import { useDispatch } from "react-redux";
+
 function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const consumptionValue = route.params.value;
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadItems() {
       try {
         const items = await getVehicleNames();
+
+        dispatch(setVehicles(items));
 
         const dropdownData = items.map((item) => {
           return { label: item, value: item };
@@ -73,14 +79,8 @@ function SaveConsumption({ navigation, route }) {
           }}
           placeholder="Select a vehicle"
         />
-
-        <Button
-          onPress={() =>
-            navigation.navigate("ListDropdownItems", {
-              itemsArray: items.flatMap((item) => item.value),
-            })
-          }
-        >
+        {/* , {itemsArray: items.flatMap((item) => item.value),} */}
+        <Button onPress={() => navigation.navigate("ListDropdownItems")}>
           Edit
         </Button>
 
@@ -89,7 +89,6 @@ function SaveConsumption({ navigation, route }) {
             navigation.navigate("EditDropdownItem", {
               vehicle: "",
               value: consumptionValue,
-              names: items.flatMap((item) => item.value),
             });
           }}
         >

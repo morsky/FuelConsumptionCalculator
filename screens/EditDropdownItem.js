@@ -2,16 +2,22 @@ import { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import Button from "../components/UI/Button";
+
 import { Colors } from "../constants/colors";
 import { Vehicle } from "../models/vehicle";
 
 import { insertVehicleData, updateVehicleName } from "../util/database";
+
 import { formatDate } from "../util/datetime";
+
+import { store } from "../store/store";
+import { useDispatch } from "react-redux";
+import { updateVehicle } from "../store/vehicles";
 
 function EditDropdownItem({ navigation, route }) {
   const oldName = route.params.vehicle;
   const consumption = route.params.value;
-  const allNames = route.params.names;
+  const allNames = store.getState().vehicleNames.vehicles;
   const [inputs, setInputs] = useState({
     newName: {
       value: oldName,
@@ -19,6 +25,7 @@ function EditDropdownItem({ navigation, route }) {
       message: "",
     },
   });
+  const dispatch = useDispatch();
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -74,9 +81,11 @@ function EditDropdownItem({ navigation, route }) {
       try {
         updateVehicleName(oldName, inputs.newName.value);
 
-        navigation.navigate("ListDropdownItems", {
-          name: inputs.newName.value,
-        });
+        dispatch(
+          updateVehicle({ oldValue: oldName, newValue: inputs.newName.value })
+        );
+        // , {name: inputs.newName.value, }
+        navigation.navigate("ListDropdownItems");
       } catch (error) {
         console.log(error);
       }
@@ -99,7 +108,8 @@ function EditDropdownItem({ navigation, route }) {
         style={[styles.input, invalidFields && styles.invalidInput]}
         onChangeText={inputChangedHandler.bind(this, "newName")}
         value={inputs.newName.value}
-        // placeholder="Name"
+        placeholder="Vehicle"
+        // maxLength={16}
       />
 
       <View style={styles.errorContainer}>
