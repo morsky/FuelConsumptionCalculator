@@ -1,10 +1,10 @@
-import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 import { View, Text, StyleSheet } from "react-native";
 
-import DropDownPicker from "react-native-dropdown-picker";
+import { useIsFocused } from "@react-navigation/native";
 
+import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
@@ -79,7 +79,7 @@ function SaveConsumption({ navigation, route }) {
           }}
           placeholder="Select a vehicle"
         />
-        {/* , {itemsArray: items.flatMap((item) => item.value),} */}
+
         <Button onPress={() => navigation.navigate("ListDropdownItems")}>
           Edit
         </Button>

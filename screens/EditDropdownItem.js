@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import Button from "../components/UI/Button";
@@ -10,14 +11,14 @@ import { insertVehicleData, updateVehicleName } from "../util/database";
 
 import { formatDate } from "../util/datetime";
 
-import { store } from "../store/store";
 import { useDispatch } from "react-redux";
+import { store } from "../store/store";
 import { updateVehicle } from "../store/vehicles";
 
 function EditDropdownItem({ navigation, route }) {
   const oldName = route.params.vehicle;
   const consumption = route.params.value;
-  const allNames = store.getState().vehicleNames.vehicles;
+  const allVehicleNames = store.getState().vehicleNames.vehicles;
   const [inputs, setInputs] = useState({
     newName: {
       value: oldName,
@@ -51,7 +52,7 @@ function EditDropdownItem({ navigation, route }) {
       return;
     }
 
-    if (allNames.includes(inputs.newName.value)) {
+    if (allVehicleNames.includes(inputs.newName.value)) {
       setInputs((curInputs) => {
         return {
           newName: {
@@ -72,19 +73,19 @@ function EditDropdownItem({ navigation, route }) {
         formatDate(new Date())
       );
       try {
-        insertVehicleData(newVehicle);
+        await insertVehicleData(newVehicle);
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {
         console.log(error);
       }
     } else {
       try {
-        updateVehicleName(oldName, inputs.newName.value);
+        await updateVehicleName(oldName, inputs.newName.value);
 
         dispatch(
           updateVehicle({ oldValue: oldName, newValue: inputs.newName.value })
         );
-        // , {name: inputs.newName.value, }
+
         navigation.navigate("ListDropdownItems");
       } catch (error) {
         console.log(error);
@@ -108,7 +109,7 @@ function EditDropdownItem({ navigation, route }) {
         style={[styles.input, invalidFields && styles.invalidInput]}
         onChangeText={inputChangedHandler.bind(this, "newName")}
         value={inputs.newName.value}
-        placeholder="Vehicle"
+        placeholder="Vehicle Name"
         // maxLength={16}
       />
 

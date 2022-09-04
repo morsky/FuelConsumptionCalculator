@@ -1,16 +1,16 @@
+import { useEffect, useState } from "react";
+
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
+import { useIsFocused } from "@react-navigation/native";
+
 import DropdownItem from "../components/Dropdown/DropdownItem";
+
 import { Colors } from "../constants/colors";
 
-import { useState } from "react";
-import { useEffect } from "react";
-
-import { store } from "../store/store";
-
 import { useDispatch } from "react-redux";
+import { store } from "../store/store";
 import { removeVehicle } from "../store/vehicles";
-import { useIsFocused } from "@react-navigation/native";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
   const [items, setItems] = useState(store.getState().vehicleNames.vehicles);

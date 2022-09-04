@@ -35,7 +35,6 @@ export function insertVehicleData(vehicle) {
         `INSERT INTO fuel_consumption (name, consumption, date) VALUES (?, ?, ?)`,
         [vehicle.name, vehicle.consumption, vehicle.date],
         (_, result) => {
-          // console.log(result);
           resolve(result);
         },
         (_, error) => {
@@ -80,8 +79,6 @@ export function updateVehicleName(oldName, newName) {
         `UPDATE fuel_consumption SET name = (?) WHERE name LIKE (?)`,
         [newName, oldName],
         (_, result) => {
-          console.log(result);
-
           resolve(result);
         },
         (_, error) => {
@@ -101,7 +98,6 @@ export function deleteVehicle(name) {
         `DELETE FROM fuel_consumption WHERE name LIKE (?)`,
         [name],
         (_, result) => {
-          console.log(result);
           resolve(result);
         },
         (_, error) => {
