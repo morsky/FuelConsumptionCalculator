@@ -12,7 +12,7 @@ import { Colors } from "../constants/colors";
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { removeVehicle } from "../store/vehicles";
-import { setVehicle, setVehicleName } from "../store/vehicleObject";
+import { setVehicleName } from "../store/vehicleObject";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
   const [items, setItems] = useState(store.getState().vehicleNames.vehicles);

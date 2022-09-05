@@ -14,7 +14,6 @@ import { formatDate } from "../util/datetime";
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { updateVehicle } from "../store/vehicles";
-import { setVehicle } from "../store/vehicleObject";
 
 function EditDropdownItem({ navigation }) {
   const vehiche = store.getState().vehiche.vehicle;
