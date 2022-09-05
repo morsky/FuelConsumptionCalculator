@@ -77,8 +77,6 @@ function EditDropdownItem({ navigation }) {
       try {
         await insertVehicleData(newVehicle);
 
-        dispatch(setVehicle({}));
-
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {
         console.log(error);
@@ -90,7 +88,6 @@ function EditDropdownItem({ navigation }) {
         dispatch(
           updateVehicle({ oldValue: oldName, newValue: inputs.newName.value })
         );
-        dispatch(setVehicle({}));
 
         navigation.navigate("ListDropdownItems");
       } catch (error) {
@@ -100,7 +97,6 @@ function EditDropdownItem({ navigation }) {
   }
 
   function cancel() {
-    dispatch(setVehicle({}));
     navigation.goBack();
   }
 

@@ -123,12 +123,12 @@ export default function App() {
             <Stack.Screen
               name="ListDropdownItems"
               component={ListDropdownItems}
-              options={{ title: "List Dropdown Items" }}
+              options={{ title: "All Dropdown Items" }}
             />
             <Stack.Screen
               name="EditDropdownItem"
               component={EditDropdownItem}
-              options={{ title: "Edit Dropdown Item" }}
+              options={{ title: " Add/Edit Dropdown Item" }}
             />
           </Stack.Navigator>
         </NavigationContainer>

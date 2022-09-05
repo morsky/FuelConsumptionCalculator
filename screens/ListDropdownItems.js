@@ -12,7 +12,7 @@ import { Colors } from "../constants/colors";
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
 import { removeVehicle } from "../store/vehicles";
-import { setVehicle } from "../store/vehicleObject";
+import { setVehicle, setVehicleName } from "../store/vehicleObject";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
   const [items, setItems] = useState(store.getState().vehicleNames.vehicles);
@@ -24,7 +24,7 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
   }, [isFocused]);
 
   function onEdit(name) {
-    dispatch(setVehicle({ name: name }));
+    dispatch(setVehicleName(name));
     navigation.navigate("EditDropdownItem");
   }
 
@@ -34,6 +34,7 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
   }
 
   function onAdd() {
+    dispatch(setVehicleName(""));
     navigation.navigate("EditDropdownItem");
   }
 

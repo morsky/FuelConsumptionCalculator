@@ -31,12 +31,11 @@ function SaveConsumption({ navigation, route }) {
       try {
         const items = await getVehicleNames();
 
-        dispatch(setVehicles(items));
-
         const dropdownData = items.map((item) => {
           return { label: item, value: item };
         });
 
+        dispatch(setVehicles(items));
         setItems(dropdownData);
       } catch (error) {
         console.log(error);

@@ -7,8 +7,12 @@ const vehicleSlice = createSlice({
     setVehicle: (state, action) => {
       state.vehicle = action.payload;
     },
+    setVehicleName: (state, action) => {
+      state.vehicle.name = action.payload;
+    },
   },
 });
 
 export const setVehicle = vehicleSlice.actions.setVehicle;
+export const setVehicleName = vehicleSlice.actions.setVehicleName;
 export default vehicleSlice.reducer;
