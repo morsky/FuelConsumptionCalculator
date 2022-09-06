@@ -31,7 +31,9 @@ function DropdownItem({ item, onDelete, onEdit }) {
   return (
     <View style={styles.container}>
       <View style={styles.item}>
-        <Text style={styles.text}>{item}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{item}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <Button onPress={EditItem}>Edit</Button>
           <Button onPress={DeleteItem}>Delete</Button>
@@ -53,15 +55,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
   },
+  textContainer: {
+    flex: 1,
+  },
   item: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 10,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
+    padding: 10,
   },
   buttonContainer: {
     flexDirection: "row",
