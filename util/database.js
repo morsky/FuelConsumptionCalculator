@@ -1,6 +1,6 @@
 import * as SQLite from "expo-sqlite";
 
-import { Vehicle } from "../models/vehicle";
+import { getDate } from "./datetime";
 
 const database = SQLite.openDatabase("fuel_consumption.db");
 
@@ -27,6 +27,8 @@ export function init() {
 
   return promise;
 }
+
+// Vehicle
 
 export function insertVehicleData(vehicle) {
   const promise = new Promise((resolve, reject) => {
@@ -99,6 +101,40 @@ export function deleteVehicle(name) {
         [name],
         (_, result) => {
           resolve(result);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+
+  return promise;
+}
+
+// Chart
+export function getVehicleConsumption(name) {
+  const promise = new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(
+        `SELECT consumption, date FROM fuel_consumption WHERE name LIKE (?) `,
+        [name],
+        (_, result) => {
+          const allData = {};
+
+          for (const dp of result.rows._array) {
+            const dateFormat = getDate(dp.date);
+
+            if (dateFormat in allData) {
+              const oldValue = allData[dateFormat];
+
+              allData[dateFormat] = (oldValue + dp.consumption) / 2;
+            } else {
+              allData[dateFormat] = dp.consumption;
+            }
+          }
+
+          resolve(allData);
         },
         (_, error) => {
           reject(error);

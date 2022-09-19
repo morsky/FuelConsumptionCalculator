@@ -7,11 +7,11 @@ import { Colors } from "../../constants/colors";
 import { deleteVehicle } from "../../util/database";
 
 function DropdownItem({ item, onDelete, onEdit }) {
-  function EditItem() {
+  function editItemHandler() {
     onEdit(item);
   }
 
-  function DeleteItem() {
+  function DeleteItemHandler() {
     Alert.alert(
       "Delete Confurmation",
       "Are you sure? The item and all of it's data will be deleted!",
@@ -35,8 +35,8 @@ function DropdownItem({ item, onDelete, onEdit }) {
           <Text style={styles.text}>{item}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Button onPress={EditItem}>Edit</Button>
-          <Button onPress={DeleteItem}>Delete</Button>
+          <Button onPress={editItemHandler}>Edit</Button>
+          <Button onPress={DeleteItemHandler}>Delete</Button>
         </View>
       </View>
     </View>

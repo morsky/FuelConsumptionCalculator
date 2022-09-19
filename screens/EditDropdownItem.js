@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import Button from "../components/UI/Button";
@@ -13,7 +12,7 @@ import { formatDate } from "../util/datetime";
 
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
-import { updateVehicle } from "../store/vehicles";
+import { updateVehicle } from "../store/vehicleOperations";
 
 function EditDropdownItem({ navigation }) {
   const vehiche = store.getState().vehiche.vehicle;
@@ -38,7 +37,7 @@ function EditDropdownItem({ navigation }) {
     });
   }
 
-  async function done() {
+  async function saveHandler() {
     if (inputs.newName.value === "") {
       setInputs((curInputs) => {
         return {
@@ -95,10 +94,6 @@ function EditDropdownItem({ navigation }) {
     }
   }
 
-  function cancel() {
-    navigation.goBack();
-  }
-
   const invalidFields = !inputs.newName.isValid;
 
   return (
@@ -124,8 +119,8 @@ function EditDropdownItem({ navigation }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button onPress={cancel}>Cancel</Button>
-        <Button onPress={done}>OK</Button>
+        <Button onPress={() => navigation.goBack()}>Cancel</Button>
+        <Button onPress={saveHandler}>OK</Button>
       </View>
     </View>
   );

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { useLayoutEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -11,15 +10,15 @@ import { Colors } from "../constants/colors";
 
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
-import { removeVehicle } from "../store/vehicles";
+import { removeVehicle } from "../store/vehicleOperations";
 import { setVehicleName } from "../store/vehicleObject";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
-  const [items, setItems] = useState(store.getState().vehicleNames.vehicles);
+  const [items, setItems] = useState([]);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     isFocused && setItems(store.getState().vehicleNames.vehicles);
   }, [isFocused]);
 
@@ -33,7 +32,7 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
     setItems(store.getState().vehicleNames.vehicles);
   }
 
-  function onAdd() {
+  function addHandler() {
     dispatch(setVehicleName(""));
     navigation.navigate("EditDropdownItem");
   }
@@ -47,7 +46,7 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
       <View style={styles.header}>
         <Text style={styles.text}>Dropdown Items:</Text>
 
-        <Button onPress={onAdd}>Add Vehicle</Button>
+        <Button onPress={addHandler}>Add Vehicle</Button>
       </View>
 
       {items.length === 0 ? (

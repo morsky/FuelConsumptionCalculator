@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import vehiclesReducer from "./vehicles";
-import vehicleObject from "./vehicleObject";
+import vehicleOperationsReducer from "./vehicleOperations";
+import vehicleObjectReducer from "./vehicleObject";
 
 export const store = configureStore({
   reducer: {
-    vehicleNames: vehiclesReducer,
-    vehiche: vehicleObject
+    vehicleNames: vehicleOperationsReducer,
+    vehiche: vehicleObjectReducer,
   },
 });

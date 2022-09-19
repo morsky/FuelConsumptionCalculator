@@ -11,3 +11,8 @@ export function formatDate(date) {
 
   return dateTime;
 }
+
+export function getDate(date) {
+  const fullDate = date.split(" ");
+  return fullDate[0];
+}

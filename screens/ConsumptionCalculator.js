@@ -1,10 +1,17 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
+
+import { useIsFocused } from "@react-navigation/native";
+
+import { useDispatch } from "react-redux";
 
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
+import { setVehicles } from "../store/vehicleOperations";
 import { calculateConsumption } from "../util/calculations";
+import { getVehicleNames } from "../util/database";
 
 function ConsumptionCalculator({ navigation }) {
   const [inputs, setInputs] = useState({
@@ -18,6 +25,22 @@ function ConsumptionCalculator({ navigation }) {
     },
   });
   const [fuelConsumption, setFuelConsumption] = useState(0);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    async function loadItems() {
+      try {
+        const vehicles = await getVehicleNames();
+
+        dispatch(setVehicles(vehicles));
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    loadItems();
+  }, [isFocused]);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -61,15 +84,21 @@ function ConsumptionCalculator({ navigation }) {
     setFuelConsumption(fuelConsumption);
   }
 
-  const invalidFields = !inputs.kilometers.isValid || !inputs.liters.isValid;
+  async function saveHandler() {
+    navigation.navigate("SaveConsumption", {
+      value: fuelConsumption,
+    });
+  }
 
-  function Clear() {
+  function clearHandler() {
     setInputs({
       kilometers: { value: "", isValid: true },
       liters: { value: "", isValid: true },
     });
     setFuelConsumption(0);
   }
+
+  const invalidFields = !inputs.kilometers.isValid || !inputs.liters.isValid;
 
   return (
     <View style={styles.container}>
@@ -118,7 +147,7 @@ function ConsumptionCalculator({ navigation }) {
       </View>
 
       <View style={styles.buttons}>
-        <Button style={styles.button} onPress={Clear}>
+        <Button style={styles.button} onPress={clearHandler}>
           Clear
         </Button>
         <Button style={styles.button} onPress={calculateHandler}>
@@ -135,17 +164,7 @@ function ConsumptionCalculator({ navigation }) {
 
       <View style={styles.buttons}>
         {!fuelConsumption ||
-          (!invalidFields && (
-            <Button
-              onPress={() =>
-                navigation.navigate("SaveConsumption", {
-                  value: fuelConsumption,
-                })
-              }
-            >
-              Save Value
-            </Button>
-          ))}
+          (!invalidFields && <Button onPress={saveHandler}>Save Value</Button>)}
       </View>
     </View>
   );

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -11,12 +10,12 @@ import { Colors } from "../constants/colors";
 
 import { Vehicle } from "../models/vehicle";
 
-import { getVehicleNames, insertVehicleData } from "../util/database";
+import { insertVehicleData } from "../util/database";
 import { formatDate } from "../util/datetime";
 
 import { useDispatch } from "react-redux";
-import { setVehicles } from "../store/vehicles";
 import { setVehicle } from "../store/vehicleObject";
+import { store } from "../store/store";
 
 function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
@@ -27,25 +26,19 @@ function SaveConsumption({ navigation, route }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function loadItems() {
-      try {
-        const items = await getVehicleNames();
+    function loadItems() {
+      const vehicles = store.getState().vehicleNames.vehicles;
+      const dropdownData = vehicles.map((item) => {
+        return { label: item, value: item };
+      });
 
-        const dropdownData = items.map((item) => {
-          return { label: item, value: item };
-        });
-
-        dispatch(setVehicles(items));
-        setItems(dropdownData);
-      } catch (error) {
-        console.log(error);
-      }
+      setItems(dropdownData);
     }
 
     isFocused && loadItems();
   }, [isFocused]);
 
-  async function save() {
+  async function saveHandler() {
     const dateTime = formatDate(new Date());
     const vehicle = new Vehicle(value, consumptionValue, dateTime);
 
@@ -57,7 +50,7 @@ function SaveConsumption({ navigation, route }) {
     }
   }
 
-  function onEdit() {
+  function editHandler() {
     dispatch(setVehicle({ name: "", consumption: consumptionValue }));
 
     navigation.navigate("ListDropdownItems");
@@ -88,12 +81,12 @@ function SaveConsumption({ navigation, route }) {
           placeholder="Select a vehicle"
         />
 
-        <Button onPress={onEdit}>Edit</Button>
+        <Button onPress={editHandler}>Edit</Button>
       </View>
 
       <View style={styles.buttonContainer}>
         <Button onPress={() => navigation.goBack()}>Cancel</Button>
-        <Button style={styles.button} onPress={save} disabled={!value}>
+        <Button style={styles.button} onPress={saveHandler} disabled={!value}>
           Save
         </Button>
       </View>

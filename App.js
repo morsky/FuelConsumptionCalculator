@@ -15,6 +15,7 @@ import SplitBill from "./screens/SplitBill";
 import SaveConsumption from "./screens/SaveConsumption";
 import ListDropdownItems from "./screens/ListDropdownItems";
 import EditDropdownItem from "./screens/EditDropdownItem";
+import Chart from "./screens/Chart";
 
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
@@ -57,6 +58,16 @@ function CalculatorOverview() {
           title: "Split Bill",
           tabBarIcon: ({ color }) => (
             <Ionicons name="people-sharp" size={36} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name="Chart"
+        component={Chart}
+        options={{
+          title: "Fuel Consumption Chart",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="bar-chart-outline" size={32} color={color} />
           ),
         }}
       />
