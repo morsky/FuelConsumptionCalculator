@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -10,6 +10,7 @@ import DrawChart from "../components/Chart/DrawChart";
 import { store } from "../store/store";
 
 import { getVehicleConsumption } from "../util/database";
+import { Colors } from "../constants/colors";
 
 function Chart() {
   const [open, setOpen] = useState(false);
@@ -64,36 +65,33 @@ function Chart() {
   }
 
   return (
-    <View>
-      <View>
-        <View>
-          <Text>Select vehicle:</Text>
-          <DropDownPicker
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            textStyle={{
-              fontSize: 20,
-            }}
-            labelStyle={{
-              fontWeight: "bold",
-            }}
-            placeholder="Select a vehicle"
-            onSelectItem={(item) => {
-              selectedItemHandler(item);
-            }}
-          />
-        </View>
+    <View style={styles.container}>
+      <View style={styles.dropdown}>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          textStyle={{
+            fontSize: 20,
+          }}
+          labelStyle={{
+            fontWeight: "bold",
+          }}
+          placeholder="Select a vehicle"
+          onSelectItem={(item) => {
+            selectedItemHandler(item);
+          }}
+        />
+      </View>
 
+      <View>
         {Object.keys(data).length === 0 ? (
-          <Text>No Data</Text>
+          <Text style={styles.chartText}>Chart View</Text>
         ) : (
-          <View>
-            <DrawChart data={data} />
-          </View>
+          <DrawChart data={data} />
         )}
       </View>
     </View>
@@ -101,3 +99,21 @@ function Chart() {
 }
 
 export default Chart;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.orange50,
+  },
+  dropdown: {
+    marginVertical: 20,
+    marginHorizontal: 40,
+  },
+  chartText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: Colors.gray700,
+    width: "100%",
+    textAlign: "center",
+  },
+});

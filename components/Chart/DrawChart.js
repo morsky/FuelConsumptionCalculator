@@ -2,6 +2,8 @@ import { StyleSheet, Dimensions } from "react-native";
 
 import { LineChart, BarChart } from "react-native-chart-kit";
 
+const CHART_LABEL_RIGHT_MARGIN = -33;
+
 function DrawChart({ data }) {
   const screenWidth = Dimensions.get("window").width;
 
@@ -13,6 +15,7 @@ function DrawChart({ data }) {
 
   return (
     // <ScrollView horizontal={true}>
+
     <LineChart
       data={{
         // Object.keys(data)
@@ -27,16 +30,15 @@ function DrawChart({ data }) {
           },
         ],
       }}
-      width={screenWidth - 24} // from react-native
+      width={screenWidth + CHART_LABEL_RIGHT_MARGIN}
       height={220}
       yAxisLabel="l "
-      // yAxisSuffix="k"
       yAxisInterval={1} // optional, defaults to 1
-      // verticalLabelRotation={-90}
       chartConfig={{
-        backgroundColor: "#e26a00",
+        // backgroundGradientFrom: "#fb8c00",
+        // backgroundGradientTo: "#ffa726",
         backgroundGradientFrom: "#fb8c00",
-        backgroundGradientTo: "#ffa726",
+        backgroundGradientTo: "#fb8c00",
         decimalPlaces: 2, // optional, defaults to 2dp
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -44,7 +46,7 @@ function DrawChart({ data }) {
           // r: "6",
           r: dotSize(data.labels.length),
           strokeWidth: "2",
-          stroke: "#ffa726",
+          stroke: "#fa7914",
         },
       }}
       bezier
@@ -58,8 +60,8 @@ export default DrawChart;
 
 const styles = StyleSheet.create({
   chartStyles: {
-    borderRadius: 16,
+    borderRadius: 10,
     marginVertical: 8,
-    marginRight: -24,
+    marginRight: CHART_LABEL_RIGHT_MARGIN,
   },
 });
