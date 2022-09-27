@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -26,20 +26,38 @@ function Chart() {
       });
 
       setItems(dropdownData);
-      // setOpen(false);
-      // setData({});
-      // setValue(null);
+      setOpen(false);
+      setData({});
+      setValue(null);
     }
 
     isFocused && loadItems();
   }, [isFocused]);
 
+  function format(element) {
+    const items = element.split("-");
+
+    const newFormat = `${items[2]}/${items[1]}/${items[0].slice(-2)}`;
+
+    return newFormat;
+  }
+
   async function selectedItemHandler(item) {
     try {
       const vehicleConsumption = await getVehicleConsumption(item.value);
 
-      setData(vehicleConsumption);
-      console.log(vehicleConsumption);
+      const data = {};
+
+      data.labels = Object.keys(vehicleConsumption);
+      data.values = Object.values(vehicleConsumption);
+
+      const formatLabels = data.labels.map((el, index) =>
+        index === 0 || index === data.labels.length - 1 ? format(el) : ""
+      );
+
+      data.labels = formatLabels;
+
+      setData(data);
     } catch (err) {
       console.warn(err);
     }
@@ -47,12 +65,9 @@ function Chart() {
 
   return (
     <View>
-      <Text>Chart Screen</Text>
-
       <View>
-        <Text>Example:</Text>
-
         <View>
+          <Text>Select vehicle:</Text>
           <DropDownPicker
             open={open}
             value={value}
@@ -76,7 +91,9 @@ function Chart() {
         {Object.keys(data).length === 0 ? (
           <Text>No Data</Text>
         ) : (
-          <DrawChart data={data} />
+          <View>
+            <DrawChart data={data} />
+          </View>
         )}
       </View>
     </View>
