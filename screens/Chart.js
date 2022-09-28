@@ -12,6 +12,8 @@ import { store } from "../store/store";
 import { getVehicleConsumption } from "../util/database";
 import { Colors } from "../constants/colors";
 
+const CHART_MAX_ELEMENTS = 6;
+
 function Chart() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -37,7 +39,6 @@ function Chart() {
 
   function format(element) {
     const items = element.split("-");
-
     const newFormat = `${items[2]}/${items[1]}/${items[0].slice(-2)}`;
 
     return newFormat;
@@ -53,7 +54,12 @@ function Chart() {
       data.values = Object.values(vehicleConsumption);
 
       const formatLabels = data.labels.map((el, index) =>
-        index === 0 || index === data.labels.length - 1 ? format(el) : ""
+        index === 0 ||
+        Math.round(data.labels.length / 2) === index ||
+        index === data.labels.length - 1 ||
+        data.labels.length < CHART_MAX_ELEMENTS
+          ? format(el)
+          : ""
       );
 
       data.labels = formatLabels;

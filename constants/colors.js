@@ -15,5 +15,8 @@ export const Colors = {
   // Screen background
   yellow100: "#f4f7a3",
 
+  // Screen background
   orange50: "#fdd2a4",
+  orange700: "#fb8c00",
+  orange800: "#fa7914",
 };
