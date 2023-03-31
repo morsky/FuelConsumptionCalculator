@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-import { useIsFocused } from "@react-navigation/native";
-
 import { useDispatch } from "react-redux";
 
 import Button from "../components/UI/Button";
@@ -26,7 +24,6 @@ function ConsumptionCalculator({ navigation }) {
   });
   const [fuelConsumption, setFuelConsumption] = useState(0);
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     async function loadItems() {
@@ -40,7 +37,7 @@ function ConsumptionCalculator({ navigation }) {
     }
 
     loadItems();
-  }, [isFocused]);
+  }, []);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {

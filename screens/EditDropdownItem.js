@@ -12,7 +12,7 @@ import { formatDate } from "../util/datetime";
 
 import { useDispatch } from "react-redux";
 import { store } from "../store/store";
-import { updateVehicle } from "../store/vehicleOperations";
+import { addVehicle, updateVehicle } from "../store/vehicleOperations";
 
 function EditDropdownItem({ navigation }) {
   const vehiche = store.getState().vehiche.vehicle;
@@ -74,6 +74,8 @@ function EditDropdownItem({ navigation }) {
       );
       try {
         await insertVehicleData(newVehicle);
+
+        dispatch(addVehicle(inputs.newName.value, newVehicle));
 
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {
