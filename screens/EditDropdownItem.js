@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import Button from "../components/UI/Button";
@@ -28,6 +28,12 @@ function EditDropdownItem({ navigation }) {
   });
   const dispatch = useDispatch();
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: !oldName ? "Add Vehicle" : "Edit Vehicle",
+    });
+  }, [navigation, oldName]);
+
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
       return {
@@ -38,7 +44,7 @@ function EditDropdownItem({ navigation }) {
   }
 
   async function saveHandler() {
-    if (inputs.newName.value === "") {
+    if (!inputs.newName.value) {
       setInputs((curInputs) => {
         return {
           newName: {
@@ -66,7 +72,7 @@ function EditDropdownItem({ navigation }) {
       return;
     }
 
-    if (oldName === "") {
+    if (!oldName) {
       const newVehicle = new Vehicle(
         inputs.newName.value,
         consumption,
@@ -101,7 +107,7 @@ function EditDropdownItem({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={[styles.text, invalidFields && styles.invalidLabel]}>
-        {oldName === "" ? "Type Vehicle Name:" : "Rename Vehicle:"}
+        {!oldName ? "Type Vehicle Name:" : "Rename Vehicle:"}
       </Text>
 
       <TextInput

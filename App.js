@@ -139,7 +139,6 @@ export default function App() {
             <Stack.Screen
               name="EditDropdownItem"
               component={EditDropdownItem}
-              options={{ title: " Add/Edit Dropdown Item" }}
             />
           </Stack.Navigator>
         </NavigationContainer>
