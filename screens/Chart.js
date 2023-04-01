@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Button } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -9,10 +9,13 @@ import DrawChart from "../components/Chart/DrawChart";
 
 import { store } from "../store/store";
 
-import { getVehicleConsumption } from "../util/database";
+import { getVehicleConsumption, getVehiclesPerPage } from "../util/database";
+import { formatDateForLabels } from "../util/datetime";
 import { Colors } from "../constants/colors";
 
 const CHART_MAX_ELEMENTS = 6;
+const itemsPerPage = 5;
+let page = 0;
 
 function Chart() {
   const [open, setOpen] = useState(false);
@@ -32,37 +35,54 @@ function Chart() {
       setOpen(false);
       setData({});
       setValue(null);
+      page = 0;
     }
 
     isFocused && loadItems();
   }, [isFocused]);
 
-  function format(element) {
-    const items = element.split("-");
-    const newFormat = `${items[2]}/${items[1]}/${items[0].slice(-2)}`;
+  function prepareData(data) {
+    const formatedData = {};
 
-    return newFormat;
+    formatedData.labels = Object.keys(data);
+    formatedData.values = Object.values(data);
+
+    const formatLabels = formatedData.labels.map((el, index) =>
+      index === 0 ||
+      Math.round(formatedData.labels.length / 2) === index ||
+      index === formatedData.labels.length - 1 ||
+      formatedData.labels.length < CHART_MAX_ELEMENTS
+        ? formatDateForLabels(el)
+        : ""
+    );
+
+    formatedData.labels = formatLabels;
+
+    return formatedData;
   }
 
-  async function selectedItemHandler(item) {
+  async function selectedItemHandler(item, itemsPerPage) {
     try {
+      // let vehicleConsumption;
+
+      // console.log(item.value, itemsPerPage, page);
+
+      // if (itemsPerPage) {
+      //   vehicleConsumption = await getVehiclesPerPage(
+      //     value ? value : item.value,
+      //     itemsPerPage,
+      //     page
+      //   );
+      // } else {
+      //   vehicleConsumption = await getVehicleConsumption(item.value);
+      // }
+
+      // // console.log(vehicleConsumption);
+      // if (item.value) page = 0;
+      // else page += itemsPerPage;
+
       const vehicleConsumption = await getVehicleConsumption(item.value);
-
-      const data = {};
-
-      data.labels = Object.keys(vehicleConsumption);
-      data.values = Object.values(vehicleConsumption);
-
-      const formatLabels = data.labels.map((el, index) =>
-        index === 0 ||
-        Math.round(data.labels.length / 2) === index ||
-        index === data.labels.length - 1 ||
-        data.labels.length < CHART_MAX_ELEMENTS
-          ? format(el)
-          : ""
-      );
-
-      data.labels = formatLabels;
+      const data = prepareData(vehicleConsumption);
 
       setData(data);
     } catch (err) {
@@ -88,7 +108,7 @@ function Chart() {
           }}
           placeholder="Select a vehicle"
           onSelectItem={(item) => {
-            selectedItemHandler(item);
+            selectedItemHandler(item, itemsPerPage);
           }}
         />
       </View>
@@ -97,7 +117,16 @@ function Chart() {
         {Object.keys(data).length === 0 ? (
           <Text style={styles.chartText}>Chart View</Text>
         ) : (
-          <DrawChart data={data} />
+          <>
+            <DrawChart data={data} />
+            <View>
+              <Button
+                title="Prev"
+                onPress={selectedItemHandler.bind(this, value, itemsPerPage)}
+              ></Button>
+              {/* <Button title="Next" onPress={switchPageHandler}></Button> */}
+            </View>
+          </>
         )}
       </View>
     </View>

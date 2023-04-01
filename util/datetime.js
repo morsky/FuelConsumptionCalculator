@@ -16,3 +16,10 @@ export function getDate(date) {
   const fullDate = date.split(" ");
   return fullDate[0];
 }
+
+export function formatDateForLabels(date) {
+  const items = date.split("-");
+  const newFormat = `${items[2]}/${items[1]}/${items[0].slice(-2)}`;
+
+  return newFormat;
+}
