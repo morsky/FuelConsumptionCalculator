@@ -113,47 +113,12 @@ export function deleteVehicle(name) {
 }
 
 // Chart
-export function getVehicleConsumption(name) {
+export function getVehicleData(name) {
   const promise = new Promise((resolve, reject) => {
     database.transaction((tx) => {
       tx.executeSql(
         `SELECT consumption, date FROM fuel_consumption WHERE name LIKE (?) `,
         [name],
-        (_, result) => {
-          const allData = {};
-
-          for (const dp of result.rows._array) {
-            const dateFormat = getDate(dp.date);
-
-            if (dateFormat in allData) {
-              const oldValue = allData[dateFormat];
-
-              allData[dateFormat] = (oldValue + dp.consumption) / 2;
-            } else {
-              allData[dateFormat] = dp.consumption;
-            }
-          }
-
-          resolve(allData);
-        },
-        (_, error) => {
-          reject(error);
-        }
-      );
-    });
-  });
-
-  return promise;
-}
-
-export function getVehiclesPerPage(name, count, page) {
-  const promise = new Promise((resolve, reject) => {
-    database.transaction((tx) => {
-      tx.executeSql(
-        `SELECT consumption, date FROM 
-        (SELECT consumption, date FROM fuel_consumption WHERE name LIKE (?) ORDER BY date DESC LIMIT (?) OFFSET (?))
-        ORDER BY date ASC`,
-        [name, count, page],
         (_, result) => {
           const allData = {};
 

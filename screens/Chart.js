@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Button } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -9,13 +9,14 @@ import DrawChart from "../components/Chart/DrawChart";
 
 import { store } from "../store/store";
 
-import { getVehicleConsumption, getVehiclesPerPage } from "../util/database";
+import { getVehicleData } from "../util/database";
 import { formatDateForLabels } from "../util/datetime";
 import { Colors } from "../constants/colors";
 
 const CHART_MAX_ELEMENTS = 6;
 const itemsPerPage = 5;
-let page = 0;
+let page = 1;
+let allPages = 0;
 
 function Chart() {
   const [open, setOpen] = useState(false);
@@ -35,7 +36,7 @@ function Chart() {
       setOpen(false);
       setData({});
       setValue(null);
-      page = 0;
+      page = 1;
     }
 
     isFocused && loadItems();
@@ -47,44 +48,70 @@ function Chart() {
     formatedData.labels = Object.keys(data);
     formatedData.values = Object.values(data);
 
-    const formatLabels = formatedData.labels.map((el, index) =>
+    return formatedData;
+  }
+
+  function formatLabels(data) {
+    const formatLabels = data.labels.map((el, index) =>
       index === 0 ||
-      Math.round(formatedData.labels.length / 2) === index ||
-      index === formatedData.labels.length - 1 ||
-      formatedData.labels.length < CHART_MAX_ELEMENTS
+      Math.round(data.labels.length / 2) === index ||
+      index === data.labels.length - 1 ||
+      data.labels.length < CHART_MAX_ELEMENTS
         ? formatDateForLabels(el)
         : ""
     );
+    data.labels = formatLabels;
 
-    formatedData.labels = formatLabels;
+    return data;
+  }
+
+  function getDataPerPage(data, length) {
+    const formatedData = {
+      labels: data.labels.splice(
+        -itemsPerPage * page,
+        itemsPerPage * page - length > 0
+          ? itemsPerPage - (itemsPerPage * page - length)
+          : itemsPerPage
+      ),
+      values: data.values.splice(
+        -itemsPerPage * page,
+        itemsPerPage * page - length > 0
+          ? itemsPerPage - (itemsPerPage * page - length)
+          : itemsPerPage
+      ),
+    };
 
     return formatedData;
   }
 
-  async function selectedItemHandler(item, itemsPerPage) {
+  function processData(data, length) {
+    const formatedData = prepareData(data);
+
+    const pageData = getDataPerPage(formatedData, length);
+
+    const pageLabels = formatLabels(pageData);
+
+    setData(pageLabels);
+  }
+
+  async function selectedItemHandler(item, direction) {
+    if (direction === "prev" && allPages >= page) page++;
+    if (direction === "next" && page >= 1) page--;
+    if (item.value) page = 1;
+
     try {
-      // let vehicleConsumption;
+      const vehicleConsumption = await getVehicleData(item.value || value);
 
-      // console.log(item.value, itemsPerPage, page);
+      if (itemsPerPage) {
+        allPages = Math.ceil(
+          Object.keys(vehicleConsumption).length / itemsPerPage
+        );
 
-      // if (itemsPerPage) {
-      //   vehicleConsumption = await getVehiclesPerPage(
-      //     value ? value : item.value,
-      //     itemsPerPage,
-      //     page
-      //   );
-      // } else {
-      //   vehicleConsumption = await getVehicleConsumption(item.value);
-      // }
-
-      // // console.log(vehicleConsumption);
-      // if (item.value) page = 0;
-      // else page += itemsPerPage;
-
-      const vehicleConsumption = await getVehicleConsumption(item.value);
-      const data = prepareData(vehicleConsumption);
-
-      setData(data);
+        processData(vehicleConsumption, Object.keys(vehicleConsumption).length);
+      } else {
+        const data = prepareData(vehicleConsumption);
+        setData(data);
+      }
     } catch (err) {
       console.warn(err);
     }
@@ -108,7 +135,7 @@ function Chart() {
           }}
           placeholder="Select a vehicle"
           onSelectItem={(item) => {
-            selectedItemHandler(item, itemsPerPage);
+            selectedItemHandler(item, "");
           }}
         />
       </View>
@@ -120,11 +147,23 @@ function Chart() {
           <>
             <DrawChart data={data} />
             <View>
-              <Button
-                title="Prev"
-                onPress={selectedItemHandler.bind(this, value, itemsPerPage)}
-              ></Button>
-              {/* <Button title="Next" onPress={switchPageHandler}></Button> */}
+              {page === allPages ? (
+                <Text></Text>
+              ) : (
+                <Button
+                  title="Prev"
+                  onPress={selectedItemHandler.bind(this, value, "prev")}
+                ></Button>
+              )}
+
+              {page < 2 ? (
+                <Text></Text>
+              ) : (
+                <Button
+                  title="Next"
+                  onPress={selectedItemHandler.bind(this, value, "next")}
+                ></Button>
+              )}
             </View>
           </>
         )}
