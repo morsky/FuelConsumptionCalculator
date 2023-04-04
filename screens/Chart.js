@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
 import DropDownPicker from "react-native-dropdown-picker";
 
+import IconButton from "../components/UI/IconButton";
 import DrawChart from "../components/Chart/DrawChart";
 
 import { store } from "../store/store";
@@ -36,7 +37,6 @@ function Chart() {
       setOpen(false);
       setData({});
       setValue(null);
-      page = 1;
     }
 
     isFocused && loadItems();
@@ -146,24 +146,30 @@ function Chart() {
         ) : (
           <>
             <DrawChart data={data} />
-            <View>
-              {page === allPages ? (
-                <Text></Text>
-              ) : (
-                <Button
-                  title="Prev"
-                  onPress={selectedItemHandler.bind(this, value, "prev")}
-                ></Button>
-              )}
+            <View style={styles.buttonsContainer}>
+              <View>
+                {page !== allPages && (
+                  <IconButton
+                    icon="caret-back"
+                    size={20}
+                    color="white"
+                    onPress={selectedItemHandler.bind(this, value, "prev")}
+                    style={styles.button}
+                  />
+                )}
+              </View>
 
-              {page < 2 ? (
-                <Text></Text>
-              ) : (
-                <Button
-                  title="Next"
-                  onPress={selectedItemHandler.bind(this, value, "next")}
-                ></Button>
-              )}
+              <View>
+                {page > 1 && (
+                  <IconButton
+                    icon="caret-forward"
+                    size={20}
+                    color="white"
+                    onPress={selectedItemHandler.bind(this, value, "next")}
+                    style={styles.button}
+                  />
+                )}
+              </View>
             </View>
           </>
         )}
@@ -189,5 +195,14 @@ const styles = StyleSheet.create({
     color: Colors.gray700,
     width: "100%",
     textAlign: "center",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 6,
+    marginHorizontal: 60,
+  },
+  button: {
+    width: 100,
   },
 });

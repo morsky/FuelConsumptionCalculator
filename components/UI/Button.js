@@ -1,5 +1,7 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 
+import { Colors } from "../../constants/colors";
+
 function Button({ children, onPress, disabled }) {
   return (
     <Pressable
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 12,
     margin: 4,
-    backgroundColor: "#3d5beb",
+    backgroundColor: Colors.blue500,
     elevation: 8,
     borderRadius: 10,
   },

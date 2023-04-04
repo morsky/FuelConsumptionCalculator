@@ -19,4 +19,7 @@ export const Colors = {
   orange50: "#fdd2a4",
   orange700: "#fb8c00",
   orange800: "#fa7914",
+
+  // Button background
+  blue500: "#3d5beb",
 };
