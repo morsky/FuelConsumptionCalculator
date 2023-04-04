@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 import { useDispatch } from "react-redux";

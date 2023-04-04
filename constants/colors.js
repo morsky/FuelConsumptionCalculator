@@ -6,6 +6,7 @@ export const Colors = {
 
   gray50: "#f5f5f5",
   gray100: "#ccc",
+  gray600: "#4d4d4d",
   gray700: "#444",
 
   // Screen background

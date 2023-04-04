@@ -20,6 +20,8 @@ import Chart from "./screens/Chart";
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
 import { store } from "./store/store";
+import Settings from "./screens/Settings";
+import IconButton from "./components/UI/IconButton";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -57,7 +59,7 @@ function CalculatorOverview() {
         options={{
           title: "Split Bill",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="people-sharp" size={36} color={color} />
+            <Ionicons name="people" size={36} color={color} />
           ),
         }}
       />
@@ -67,7 +69,7 @@ function CalculatorOverview() {
         options={{
           title: "Fuel Consumption Chart",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="bar-chart-outline" size={32} color={color} />
+            <Ionicons name="bar-chart" size={32} color={color} />
           ),
         }}
       />
@@ -131,11 +133,19 @@ export default function App() {
               component={SaveConsumption}
               options={{ title: "Save Consumption" }}
             />
+
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+              options={{ title: "Settings" }}
+            />
+
             <Stack.Screen
               name="ListDropdownItems"
               component={ListDropdownItems}
               options={{ title: "All Dropdown Items" }}
             />
+
             <Stack.Screen
               name="EditDropdownItem"
               component={EditDropdownItem}

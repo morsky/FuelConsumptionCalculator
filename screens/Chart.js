@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -19,7 +19,7 @@ const itemsPerPage = 5;
 let page = 1;
 let allPages = 0;
 
-function Chart() {
+function Chart({ navigation }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
@@ -41,6 +41,25 @@ function Chart() {
 
     isFocused && loadItems();
   }, [isFocused]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <IconButton
+            icon="build"
+            color={Colors.gray600}
+            size={28}
+            onPress={headerBttonPressHandler}
+          />
+        );
+      },
+    });
+  }, [navigation, headerBttonPressHandler]);
+
+  function headerBttonPressHandler() {
+    navigation.navigate("Settings");
+  }
 
   function prepareData(data) {
     const formatedData = {};
@@ -199,10 +218,12 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 6,
+    marginTop: 10,
     marginHorizontal: 60,
   },
   button: {
     width: 100,
+    backgroundColor: Colors.blue500,
+    borderRadius: 10,
   },
 });
