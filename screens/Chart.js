@@ -15,7 +15,7 @@ import { formatDateForLabels } from "../util/datetime";
 import { Colors } from "../constants/colors";
 
 const CHART_MAX_ELEMENTS = 6;
-const itemsPerPage = 5;
+
 let page = 1;
 let allPages = 0;
 
@@ -25,6 +25,8 @@ function Chart({ navigation }) {
   const [items, setItems] = useState([]);
   const [data, setData] = useState({});
   const isFocused = useIsFocused();
+
+  const itemsPerPage = 5;
 
   useEffect(() => {
     function loadItems() {

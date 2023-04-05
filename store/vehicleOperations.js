@@ -6,7 +6,7 @@ const vehicleSlice = createSlice({
     vehicles: [],
   },
   reducers: {
-    setVehicles: (state, action) => {
+    getAllVehicles: (state, action) => {
       state.vehicles = action.payload;
     },
     addVehicle: (state, action) => {
@@ -24,7 +24,7 @@ const vehicleSlice = createSlice({
   },
 });
 
-export const setVehicles = vehicleSlice.actions.setVehicles;
+export const getAllVehicles = vehicleSlice.actions.getAllVehicles;
 export const addVehicle = vehicleSlice.actions.addVehicle;
 export const removeVehicle = vehicleSlice.actions.removeVehicle;
 export const updateVehicle = vehicleSlice.actions.updateVehicle;

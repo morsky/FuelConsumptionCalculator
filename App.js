@@ -16,12 +16,11 @@ import SaveConsumption from "./screens/SaveConsumption";
 import ListDropdownItems from "./screens/ListDropdownItems";
 import EditDropdownItem from "./screens/EditDropdownItem";
 import Chart from "./screens/Chart";
+import Settings from "./screens/Settings";
 
 import { Colors } from "./constants/colors";
 import { init } from "./util/database";
 import { store } from "./store/store";
-import Settings from "./screens/Settings";
-import IconButton from "./components/UI/IconButton";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();

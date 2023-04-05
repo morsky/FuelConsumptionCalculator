@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
-import { setVehicles } from "../store/vehicleOperations";
+import { getAllVehicles } from "../store/vehicleOperations";
 import { calculateConsumption } from "../util/calculations";
 import { getVehicleNames } from "../util/database";
 
@@ -30,7 +30,7 @@ function ConsumptionCalculator({ navigation }) {
       try {
         const vehicles = await getVehicleNames();
 
-        dispatch(setVehicles(vehicles));
+        dispatch(getAllVehicles(vehicles));
       } catch (err) {
         console.warn(err);
       }
@@ -78,6 +78,7 @@ function ConsumptionCalculator({ navigation }) {
       kilometers: inputs.kilometers.value,
       liters: inputs.liters.value,
     });
+
     setFuelConsumption(fuelConsumption);
   }
 
