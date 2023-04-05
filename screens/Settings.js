@@ -2,15 +2,14 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 
 import { useState } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Colors } from "../constants/colors";
 
-function Settings() {
-  // const [text, setText] = useState("5");
-  // const [isValid, setIsValid] = useState(true);
+function Settings({ route }) {
   const [inputs, setInputs] = useState({
-    itemsPerPage: { value: 5, isValid: true },
+    itemsPerPage: { value: route.params.pages, isValid: true },
   });
-  const [editField, setEditField] = useState(false);
 
   function inputChangedHandler(enteredText) {
     setText(enteredText);
@@ -29,7 +28,7 @@ function Settings() {
     const itemsPerPage = +inputs.itemsPerPage.value;
 
     const itemsPerPageisValid =
-      Number.isInteger(itemsPerPage) && itemsPerPage > 0;
+      Number.isInteger(itemsPerPage) && itemsPerPage >= 0;
 
     if (!itemsPerPageisValid) {
       inputs.itemsPerPage.isValid = itemsPerPageisValid;
@@ -42,21 +41,35 @@ function Settings() {
         };
       });
     }
+
+    storeData(itemsPerPage.toString());
+  }
+
+  async function storeData(value) {
+    try {
+      await AsyncStorage.setItem("itemsPerPage", value);
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputText}>Set Items Per Page</Text>
-        <TextInput
-          style={[styles.input, !inputs.itemsPerPage.isValid && styles.error]}
-          placeholder="Enter Integer Number"
-          defaultValue={inputs.itemsPerPage.value.toString()}
-          keyboardType="numeric"
-          onChangeText={inputChangedHandler.bind(this, "itemsPerPage")}
-          onSubmitEditing={checkIUserInput}
-          maxLength={6}
-        />
+      <View style={styles.itemContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputText}>Set Items Per Page</Text>
+
+          <TextInput
+            style={[styles.input, !inputs.itemsPerPage.isValid && styles.error]}
+            defaultValue={inputs.itemsPerPage.value.toString()}
+            keyboardType="numeric"
+            onChangeText={inputChangedHandler.bind(this, "itemsPerPage")}
+            onSubmitEditing={checkIUserInput}
+            maxLength={3}
+          />
+        </View>
+
+        <Text style={styles.text}>To view all data set Items Per Page = 0</Text>
       </View>
     </View>
   );
@@ -85,10 +98,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "right",
-    padding: 6,
-    width: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    minWidth: 60,
   },
-  inputText: { fontSize: 18 },
+  inputText: {
+    fontSize: 18,
+  },
+  text: {
+    color: Colors.gray700,
+    textAlign: "center",
+    marginTop: 5,
+    marginHorizontal: 10,
+  },
+  itemContainer: {
+    borderBottomColor: Colors.gray600,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    padding: 5,
+  },
   error: {
     backgroundColor: Colors.error50,
     borderColor: Colors.error300,

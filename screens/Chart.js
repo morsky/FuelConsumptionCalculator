@@ -5,6 +5,8 @@ import { useIsFocused } from "@react-navigation/native";
 
 import DropDownPicker from "react-native-dropdown-picker";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import IconButton from "../components/UI/IconButton";
 import DrawChart from "../components/Chart/DrawChart";
 
@@ -15,9 +17,8 @@ import { formatDateForLabels } from "../util/datetime";
 import { Colors } from "../constants/colors";
 
 const CHART_MAX_ELEMENTS = 6;
-
 let page = 1;
-let allPages = 0;
+let allPages = 1;
 
 function Chart({ navigation }) {
   const [open, setOpen] = useState(false);
@@ -25,8 +26,7 @@ function Chart({ navigation }) {
   const [items, setItems] = useState([]);
   const [data, setData] = useState({});
   const isFocused = useIsFocused();
-
-  const itemsPerPage = 5;
+  const [itemsPerPage, setItemsPerPage] = useState(0);
 
   useEffect(() => {
     function loadItems() {
@@ -42,6 +42,20 @@ function Chart({ navigation }) {
     }
 
     isFocused && loadItems();
+  }, [isFocused]);
+
+  useEffect(() => {
+    async function getItemsPerPage() {
+      try {
+        const value = await AsyncStorage.getItem("itemsPerPage");
+
+        setItemsPerPage(+value);
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    isFocused && getItemsPerPage();
   }, [isFocused]);
 
   useLayoutEffect(() => {
@@ -60,7 +74,7 @@ function Chart({ navigation }) {
   }, [navigation, headerBttonPressHandler]);
 
   function headerBttonPressHandler() {
-    navigation.navigate("Settings");
+    navigation.navigate("Settings", { pages: itemsPerPage });
   }
 
   function prepareData(data) {
@@ -75,7 +89,7 @@ function Chart({ navigation }) {
   function formatLabels(data) {
     const formatLabels = data.labels.map((el, index) =>
       index === 0 ||
-      Math.round(data.labels.length / 2) === index ||
+      Math.floor(data.labels.length / 2) === index ||
       index === data.labels.length - 1 ||
       data.labels.length < CHART_MAX_ELEMENTS
         ? formatDateForLabels(el)
@@ -130,8 +144,11 @@ function Chart({ navigation }) {
 
         processData(vehicleConsumption, Object.keys(vehicleConsumption).length);
       } else {
-        const data = prepareData(vehicleConsumption);
-        setData(data);
+        const pageData = prepareData(vehicleConsumption);
+
+        const pageLabels = formatLabels(pageData);
+
+        setData(pageLabels);
       }
     } catch (err) {
       console.warn(err);
@@ -169,7 +186,7 @@ function Chart({ navigation }) {
             <DrawChart data={data} />
             <View style={styles.buttonsContainer}>
               <View>
-                {page !== allPages && (
+                {page < allPages && (
                   <IconButton
                     icon="caret-back"
                     size={20}
