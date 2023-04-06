@@ -53,6 +53,8 @@ function Chart({ navigation }) {
       setOpen(false);
       setData({});
       setValue(null);
+      page = 1;
+      allPages = 1;
     }
 
     loadItems();
