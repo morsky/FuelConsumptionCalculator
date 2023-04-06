@@ -1,15 +1,98 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
 
 import { useState } from "react";
 
+import { useDispatch } from "react-redux";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
+import * as DocumentPicker from "expo-document-picker";
+import * as SQLite from "expo-sqlite";
+
 import { Colors } from "../constants/colors";
+
+import { getVehicleNames } from "../util/database";
+
+import { getAllVehicles } from "../store/vehicleOperations";
+
+import Button from "../components/UI/Button";
 
 function Settings({ route }) {
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
   });
+
+  const dispatch = useDispatch();
+
+  async function exportDB() {
+    if (Platform.OS === "android") {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+      if (permissions.granted) {
+        const base64 = await FileSystem.readAsStringAsync(
+          FileSystem.documentDirectory + "SQLite/fuel_consumption.db",
+          { encoding: FileSystem.EncodingType.Base64 }
+        );
+
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          "fuel_consumption.db",
+          "application/octet-stream"
+        ).then(async (uri) => {
+          await FileSystem.writeAsStringAsync(uri, base64, {
+            encoding: FileSystem.EncodingType.Base64,
+          }).catch((err) => console.log(err));
+        });
+      } else {
+        console.log("Permissions not granted!");
+      }
+    } else {
+      await Sharing.shareAsync(
+        FileSystem.documentDirectory + "SQLite/fuel_consumption.db"
+      );
+    }
+  }
+
+  async function importDB() {
+    let result = await DocumentPicker.getDocumentAsync({
+      copyToCacheDirectory: true,
+    });
+
+    if (result.type === "success") {
+      if (
+        !(
+          await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite")
+        ).exists
+      ) {
+        await FileSystem.makeDirectoryAsync(
+          FileSystem.documentDirectory + "SQLite"
+        );
+      }
+
+      const base64 = await FileSystem.readAsStringAsync(result.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await FileSystem.writeAsStringAsync(
+        FileSystem.documentDirectory + "SQLite/fuel_consumption.db",
+        base64,
+        { encoding: FileSystem.EncodingType.Base64 }
+      );
+
+      SQLite.openDatabase("fuel_consumption.db");
+
+      try {
+        const vehicles = await getVehicleNames();
+
+        dispatch(getAllVehicles(vehicles));
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  }
 
   function inputChangedHandler(enteredText) {
     setText(enteredText);
@@ -71,6 +154,20 @@ function Settings({ route }) {
 
         <Text style={styles.text}>To view all data set Items Per Page = 0</Text>
       </View>
+
+      <View style={styles.itemContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputText}>Export Data</Text>
+          <Button onPress={exportDB}>Export</Button>
+        </View>
+      </View>
+
+      <View style={styles.itemContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputText}>Import Data</Text>
+          <Button onPress={importDB}>Import</Button>
+        </View>
+      </View>
     </View>
   );
 }
@@ -86,8 +183,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 20,
-    marginTop: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   input: {
     borderRadius: 6,
