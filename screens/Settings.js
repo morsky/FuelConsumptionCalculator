@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.gray600,
     borderTopWidth: 1,
     borderBottomWidth: 1,
+    backgroundColor: Colors.orange300,
     padding: 5,
   },
   error: {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Keyboard } from "react-native";
 
 import Button from "../components/UI/Button";
 
@@ -29,6 +29,8 @@ function SplitBill() {
   }
 
   function calculateHandler() {
+    Keyboard.dismiss();
+
     const inputData = {
       cost: +inputs.cost.value,
       persons: +inputs.persons.value,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Keyboard } from "react-native";
 
 import { useDispatch } from "react-redux";
 
@@ -49,6 +49,8 @@ function ConsumptionCalculator({ navigation }) {
   }
 
   function calculateHandler() {
+    Keyboard.dismiss();
+
     const inputData = {
       kilometers: +inputs.kilometers.value,
       liters: +inputs.liters.value,
