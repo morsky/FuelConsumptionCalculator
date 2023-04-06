@@ -29,6 +29,20 @@ function Chart({ navigation }) {
   const [itemsPerPage, setItemsPerPage] = useState(0);
 
   useEffect(() => {
+    async function getItemsPerPage() {
+      try {
+        const value = await AsyncStorage.getItem("itemsPerPage");
+
+        setItemsPerPage(+value);
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    isFocused && getItemsPerPage();
+  }, [isFocused]);
+
+  useLayoutEffect(() => {
     function loadItems() {
       const vehicles = store.getState().vehicleNames.vehicles;
       const dropdownData = vehicles.map((item) => {
@@ -41,21 +55,7 @@ function Chart({ navigation }) {
       setValue(null);
     }
 
-    isFocused && loadItems();
-  }, [isFocused]);
-
-  useEffect(() => {
-    async function getItemsPerPage() {
-      try {
-        const value = await AsyncStorage.getItem("itemsPerPage");
-
-        setItemsPerPage(+value);
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-
-    isFocused && getItemsPerPage();
+    loadItems();
   }, [isFocused]);
 
   useLayoutEffect(() => {
