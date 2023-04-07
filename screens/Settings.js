@@ -37,17 +37,17 @@ function Settings({ route }) {
           { encoding: FileSystem.EncodingType.Base64 }
         );
 
-        await FileSystem.StorageAccessFramework.createFileAsync(
+        const uri = await FileSystem.StorageAccessFramework.createFileAsync(
           permissions.directoryUri,
           "fuel_consumption.db",
           "application/octet-stream"
-        ).then(async (uri) => {
-          await FileSystem.writeAsStringAsync(uri, base64, {
-            encoding: FileSystem.EncodingType.Base64,
-          }).catch((err) => console.log(err));
+        );
+
+        await FileSystem.writeAsStringAsync(uri, base64, {
+          encoding: FileSystem.EncodingType.Base64,
         });
       } else {
-        console.log("Permissions not granted!");
+        console.warn("Permissions not granted!");
       }
     } else {
       await Sharing.shareAsync(
@@ -84,13 +84,9 @@ function Settings({ route }) {
 
       SQLite.openDatabase("fuel_consumption.db");
 
-      try {
-        const vehicles = await getVehicleNames();
+      const vehicles = await getVehicleNames();
 
-        dispatch(getAllVehicles(vehicles));
-      } catch (err) {
-        console.warn(err);
-      }
+      dispatch(getAllVehicles(vehicles));
     }
   }
 
