@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Platform,
+  Alert,
+} from "react-native";
 
 import { useState } from "react";
 
@@ -19,6 +26,11 @@ import { getAllVehicles } from "../store/vehicleOperations";
 
 import Button from "../components/UI/Button";
 
+const LOCATION_NOT_WRITABLE =
+  "Location not writable! Please try another location!";
+const DB_EXPORT_SUCCESSFUL = "Exported DB successfully!";
+const DB_NAME = "fuel_consumption.db";
+
 function Settings({ route }) {
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
@@ -28,65 +40,85 @@ function Settings({ route }) {
 
   async function exportDB() {
     if (Platform.OS === "android") {
-      const permissions =
-        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      try {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-      if (permissions.granted) {
-        const base64 = await FileSystem.readAsStringAsync(
-          FileSystem.documentDirectory + "SQLite/fuel_consumption.db",
-          { encoding: FileSystem.EncodingType.Base64 }
-        );
+        if (permissions.granted) {
+          const base64 = await FileSystem.readAsStringAsync(
+            FileSystem.documentDirectory + `SQLite/${DB_NAME}`,
+            { encoding: FileSystem.EncodingType.Base64 }
+          );
 
-        const uri = await FileSystem.StorageAccessFramework.createFileAsync(
-          permissions.directoryUri,
-          "fuel_consumption.db",
-          "application/octet-stream"
-        );
+          const uri = await FileSystem.StorageAccessFramework.createFileAsync(
+            permissions.directoryUri,
+            DB_NAME,
+            "application/octet-stream"
+          );
 
-        await FileSystem.writeAsStringAsync(uri, base64, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-      } else {
-        console.warn("Permissions not granted!");
+          await FileSystem.writeAsStringAsync(uri, base64, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          Alert.alert("Export DB", DB_EXPORT_SUCCESSFUL);
+        } else {
+          Alert.alert("Export DB", "Exporting DB terinated!");
+        }
+      } catch (err) {
+        Alert.alert("Export DB", LOCATION_NOT_WRITABLE);
       }
     } else {
-      await Sharing.shareAsync(
-        FileSystem.documentDirectory + "SQLite/fuel_consumption.db"
-      );
+      try {
+        await Sharing.shareAsync(
+          FileSystem.documentDirectory + `SQLite/${DB_NAME}`
+        );
+
+        Alert.alert("Export DB", DB_EXPORT_SUCCESSFUL);
+      } catch (err) {
+        Alert.alert("Export DB", LOCATION_NOT_WRITABLE);
+      }
     }
   }
 
   async function importDB() {
-    let result = await DocumentPicker.getDocumentAsync({
-      copyToCacheDirectory: true,
-    });
-
-    if (result.type === "success") {
-      if (
-        !(
-          await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite")
-        ).exists
-      ) {
-        await FileSystem.makeDirectoryAsync(
-          FileSystem.documentDirectory + "SQLite"
-        );
-      }
-
-      const base64 = await FileSystem.readAsStringAsync(result.uri, {
-        encoding: FileSystem.EncodingType.Base64,
+    try {
+      let result = await DocumentPicker.getDocumentAsync({
+        copyToCacheDirectory: true,
       });
 
-      await FileSystem.writeAsStringAsync(
-        FileSystem.documentDirectory + "SQLite/fuel_consumption.db",
-        base64,
-        { encoding: FileSystem.EncodingType.Base64 }
-      );
+      if (result.type === "success") {
+        if (
+          !(
+            await FileSystem.getInfoAsync(
+              FileSystem.documentDirectory + "SQLite"
+            )
+          ).exists
+        ) {
+          await FileSystem.makeDirectoryAsync(
+            FileSystem.documentDirectory + "SQLite"
+          );
+        }
 
-      SQLite.openDatabase("fuel_consumption.db");
+        const base64 = await FileSystem.readAsStringAsync(result.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
 
-      const vehicles = await getVehicleNames();
+        await FileSystem.writeAsStringAsync(
+          FileSystem.documentDirectory + `SQLite/${DB_NAME}`,
+          base64,
+          { encoding: FileSystem.EncodingType.Base64 }
+        );
 
-      dispatch(getAllVehicles(vehicles));
+        SQLite.openDatabase(DB_NAME);
+
+        const vehicles = await getVehicleNames();
+
+        dispatch(getAllVehicles(vehicles));
+
+        Alert.alert("Import DB", "DB imported successfully!");
+      }
+    } catch (err) {
+      Alert.alert("Something went wrong! Please, try again!");
     }
   }
 
