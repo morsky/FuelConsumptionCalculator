@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 
 import Button from "../components/UI/Button";
 
@@ -82,6 +82,8 @@ function EditDropdownItem({ navigation }) {
         await insertVehicleData(newVehicle);
 
         dispatch(addVehicle(inputs.newName.value, newVehicle));
+
+        Alert.alert("Add Vehiche", "Vehiche added successfully!");
 
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {

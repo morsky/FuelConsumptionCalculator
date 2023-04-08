@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
 import DropDownPicker from "react-native-dropdown-picker";
+
 import Button from "../components/UI/Button";
+import IconButton from "../components/UI/IconButton";
 
 import { Colors } from "../constants/colors";
 
 import { Vehicle } from "../models/vehicle";
 
 import { insertVehicleData } from "../util/database";
+
 import { formatDate } from "../util/datetime";
 
 import { useDispatch } from "react-redux";
@@ -37,6 +40,27 @@ function SaveConsumption({ navigation, route }) {
 
     isFocused && loadItems();
   }, [isFocused]);
+
+  useLayoutEffect(() => {
+    setValue(null);
+    setOpen(false);
+  }, [isFocused]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <IconButton
+            icon="build"
+            color={Colors.gray600}
+            size={28}
+            onPress={editHandler}
+            style={styles.headerButton}
+          />
+        );
+      },
+    });
+  }, [navigation, editHandler]);
 
   async function saveHandler() {
     const dateTime = formatDate(new Date());
@@ -80,8 +104,6 @@ function SaveConsumption({ navigation, route }) {
           }}
           placeholder="Select a vehicle"
         />
-
-        <Button onPress={editHandler}>Edit</Button>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -122,5 +144,8 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8,
+  },
+  headerButton: {
+    marginRight: -15,
   },
 });
