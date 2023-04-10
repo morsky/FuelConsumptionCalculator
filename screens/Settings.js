@@ -7,11 +7,13 @@ import {
   Alert,
 } from "react-native";
 
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import DropDownPicker from "react-native-dropdown-picker";
 
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
@@ -23,8 +25,13 @@ import { Colors } from "../constants/colors";
 import { getVehicleNames } from "../util/database";
 
 import { getAllVehicles } from "../store/vehicleOperations";
+import { setLangulage } from "../store/langulage";
 
 import Button from "../components/UI/Button";
+
+import i18n from "i18n-js";
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
 
 const LOCATION_NOT_WRITABLE =
   "Location not writable! Please try another location!";
@@ -35,8 +42,23 @@ function Settings({ route }) {
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
   });
-
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "English", value: "en-US" },
+    { label: "Български", value: "bg-BG" },
+  ]);
+  let [locale, setLocale] = useState("");
   const dispatch = useDispatch();
+  const langulage = useSelector((state) => state.langulage);
+
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
+  i18n.locale = locale;
+
+  useLayoutEffect(() => {
+    setLocale(langulage.langulage);
+  });
 
   async function exportDB() {
     if (Platform.OS === "android") {
@@ -122,6 +144,14 @@ function Settings({ route }) {
     }
   }
 
+  function selectedItemHandler(langulage) {
+    const lang = langulage.value;
+
+    setLocale(lang);
+    storeData("langulage", lang);
+    dispatch(setLangulage(lang));
+  }
+
   function inputChangedHandler(enteredText) {
     setText(enteredText);
   }
@@ -153,12 +183,12 @@ function Settings({ route }) {
       });
     }
 
-    storeData(itemsPerPage.toString());
+    storeData("itemsPerPage", itemsPerPage.toString());
   }
 
-  async function storeData(value) {
+  async function storeData(key, value) {
     try {
-      await AsyncStorage.setItem("itemsPerPage", value);
+      await AsyncStorage.setItem(key, value);
     } catch (err) {
       console.warn(err);
     }
@@ -194,6 +224,33 @@ function Settings({ route }) {
         <View style={styles.inputContainer}>
           <Text style={styles.inputText}>Import Data</Text>
           <Button onPress={importDB}>Import</Button>
+        </View>
+      </View>
+
+      <View style={styles.itemContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputText}>Change langulage</Text>
+        </View>
+
+        <View style={styles.dropdown}>
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            textStyle={{
+              fontSize: 20,
+            }}
+            labelStyle={{
+              fontWeight: "bold",
+            }}
+            placeholder="Select langulage"
+            onSelectItem={(item) => {
+              selectedItemHandler(item);
+            }}
+          />
         </View>
       </View>
     </View>
@@ -246,5 +303,9 @@ const styles = StyleSheet.create({
   error: {
     backgroundColor: Colors.error50,
     borderColor: Colors.error300,
+  },
+  dropdown: {
+    marginVertical: 20,
+    marginHorizontal: 40,
   },
 });

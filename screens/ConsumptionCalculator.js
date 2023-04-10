@@ -1,15 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 
 import { View, Text, TextInput, StyleSheet, Keyboard } from "react-native";
 
-import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
+
 import { getAllVehicles } from "../store/vehicleOperations";
+import { setLangulage } from "../store/langulage";
+
 import { calculateConsumption } from "../util/calculations";
 import { getVehicleNames } from "../util/database";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
+import { useIsFocused } from "@react-navigation/native";
 
 function ConsumptionCalculator({ navigation }) {
   const [inputs, setInputs] = useState({
@@ -23,7 +34,15 @@ function ConsumptionCalculator({ navigation }) {
     },
   });
   const [fuelConsumption, setFuelConsumption] = useState(0);
+  const langulage = useSelector((state) => state.langulage)?.langulage;
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
+
+  // console.log(langulage);
 
   useEffect(() => {
     async function loadItems() {
@@ -31,6 +50,12 @@ function ConsumptionCalculator({ navigation }) {
         const vehicles = await getVehicleNames();
 
         dispatch(getAllVehicles(vehicles));
+
+        const lang = await AsyncStorage.getItem("langulage");
+
+        dispatch(setLangulage(lang));
+
+        i18n.locale = lang.langulage;
       } catch (err) {
         console.warn(err);
       }
@@ -38,6 +63,17 @@ function ConsumptionCalculator({ navigation }) {
 
     loadItems();
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: i18n.t("screenName") });
+  }, [isFocused]);
+
+  // useLayoutEffect(() => {
+  //   // i18n.locale = langulage;
+  //   console.log(langulage);
+
+  //   navigation.setOptions({ title: i18n.t("screenName") });
+  // }, [isFocused]);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -109,7 +145,7 @@ function ConsumptionCalculator({ navigation }) {
             !inputs.kilometers.isValid && styles.invalidLabel,
           ]}
         >
-          Enter kilometers:
+          {i18n.t("kilometersInput")}
         </Text>
         <TextInput
           style={[
@@ -127,7 +163,7 @@ function ConsumptionCalculator({ navigation }) {
         <Text
           style={[styles.label, !inputs.liters.isValid && styles.invalidLabel]}
         >
-          Enter liters:
+          {i18n.t("litersInput")}
         </Text>
         <TextInput
           style={[styles.input, !inputs.liters.isValid && styles.invalidInput]}
@@ -140,31 +176,31 @@ function ConsumptionCalculator({ navigation }) {
 
       <View style={styles.errorContainer}>
         {invalidFields && (
-          <Text style={styles.errorText}>
-            Invalid input values - please check your entered data!
-          </Text>
+          <Text style={styles.errorText}>{i18n.t("errorInputsMsg")}</Text>
         )}
       </View>
 
       <View style={styles.buttons}>
         <Button style={styles.button} onPress={clearHandler}>
-          Clear
+          {i18n.t("clearButton")}
         </Button>
         <Button style={styles.button} onPress={calculateHandler}>
-          Calculate
+          {i18n.t("calculateButton")}
         </Button>
       </View>
 
       <View style={styles.resultContainer}>
         <Text style={styles.label}>
-          l/100km:{" "}
+          {i18n.t("litersPer100km")}:{" "}
           {fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)}
         </Text>
       </View>
 
       <View style={styles.buttons}>
         {!fuelConsumption ||
-          (!invalidFields && <Button onPress={saveHandler}>Save Value</Button>)}
+          (!invalidFields && (
+            <Button onPress={saveHandler}>{i18n.t("saveButton")}</Button>
+          ))}
       </View>
     </View>
   );
@@ -204,7 +240,7 @@ const styles = StyleSheet.create({
     minWidth: 120,
   },
   errorContainer: {
-    height: 30,
+    height: 60,
     marginTop: 20,
   },
   errorText: {
