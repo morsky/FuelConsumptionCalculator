@@ -3,7 +3,7 @@ const bg = {
   consumptionCalculatorScreen: "Калкулатор на разход",
   saveConsumptionScreen: "Запазване на разход",
   listDropdownItemsScreen: "Всички превозни срества",
-  splitBillScreen: "Разделяне на сметка",
+  splitBillScreen: "Споделяне на сметка",
 
   // Screen Title
   addVehicleTitle: "Добавяне на превозно средство",
@@ -33,6 +33,9 @@ const bg = {
   noVehiclesFoundMsg: "Няма въведени превозни средства!",
   typeVehicleName: "Напишете име",
   renameVehicle: "Преименуване",
+  enterCost: "Сметка",
+  enterPerson: "Хора",
+  costPerPerson: "Цена на човек",
 
   // Dropdown Placeholder
   saveConsumptionDropdown: "Превозно средство",

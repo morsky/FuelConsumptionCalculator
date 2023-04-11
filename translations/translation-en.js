@@ -33,6 +33,9 @@ const en = {
   noVehiclesFoundMsg: "No vehicles found!",
   typeVehicleName: "Type Vehicle Name",
   renameVehicle: "Rename Vehicle",
+  enterCost: "Enter cost",
+  enterPerson: "Enter persons",
+  costPerPerson: "Cost per person",
 
   // Dropdown Placeholder
   saveConsumptionDropdown: "Select a vehicle",
