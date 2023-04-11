@@ -221,23 +221,19 @@ function Settings({ navigation, route }) {
       </View>
 
       <View style={styles.itemContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
-          <Button onPress={exportDB}>Export</Button>
-        </View>
+        <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
+
+        <Button onPress={exportDB}>Export</Button>
       </View>
 
       <View style={styles.itemContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>{i18n.t("importData")}</Text>
-          <Button onPress={importDB}>Import</Button>
-        </View>
+        <Text style={styles.inputText}>{i18n.t("importData")}</Text>
+
+        <Button onPress={importDB}>Import</Button>
       </View>
 
       <View style={styles.itemContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>{i18n.t("changeLangulage")}</Text>
-        </View>
+        <Text style={styles.inputText}>{i18n.t("changeLangulage")}</Text>
 
         <View style={styles.dropdown}>
           <DropDownPicker
@@ -271,12 +267,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.orange50,
   },
-  inputContainer: {
-    flexDirection: "row",
+  itemContainer: {
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    borderBottomColor: Colors.gray600,
+    borderBottomWidth: 1,
+    backgroundColor: Colors.orange300,
+    padding: 5,
+  },
+  inputContainer: {
+    alignItems: "center",
   },
   input: {
     borderRadius: 6,
@@ -300,19 +300,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginHorizontal: 10,
   },
-  itemContainer: {
-    borderBottomColor: Colors.gray600,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    backgroundColor: Colors.orange300,
-    padding: 5,
-  },
   error: {
     backgroundColor: Colors.error50,
     borderColor: Colors.error300,
   },
   dropdown: {
-    marginVertical: 20,
-    marginHorizontal: 40,
+    marginVertical: 10,
+    width: "60%",
   },
 });

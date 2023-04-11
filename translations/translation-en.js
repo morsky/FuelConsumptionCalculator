@@ -22,7 +22,7 @@ const en = {
   clearButton: "Clear",
   calculateButton: "Calculate",
   cancelButton: "Cancel",
-  saveButton: "Save Value",
+  saveButton: "Save",
   addButton: "Add",
   editButton: "Edit",
   deleteButton: "Delete",

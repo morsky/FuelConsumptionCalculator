@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     minWidth: 120,
   },
   errorContainer: {
-    height: 60,
+    height: 40,
     marginTop: 20,
   },
   errorText: {
