@@ -46,7 +46,6 @@ function CalculatorOverview() {
         name="ConsumptionCalculator"
         component={ConsumptionCalculator}
         options={{
-          title: "Consumption Calculator",
           tabBarIcon: ({ color }) => (
             <Ionicons name="calculator" size={36} color={color} />
           ),

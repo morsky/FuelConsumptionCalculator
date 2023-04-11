@@ -20,7 +20,6 @@ import i18n from "i18n-js";
 
 import { en } from "../translations/translation-en";
 import { bg } from "../translations/translation-bg";
-import { useIsFocused } from "@react-navigation/native";
 
 function ConsumptionCalculator({ navigation }) {
   const [inputs, setInputs] = useState({
@@ -36,13 +35,12 @@ function ConsumptionCalculator({ navigation }) {
   const [fuelConsumption, setFuelConsumption] = useState(0);
   const langulage = useSelector((state) => state.langulage)?.langulage;
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
 
   i18n.locale = langulage;
   i18n.fallbacks = true;
   i18n.translations = { en, bg };
 
-  // console.log(langulage);
+  console.log(langulage);
 
   useEffect(() => {
     async function loadItems() {
@@ -55,7 +53,7 @@ function ConsumptionCalculator({ navigation }) {
 
         dispatch(setLangulage(lang));
 
-        i18n.locale = lang.langulage;
+        i18n.locale = lang;
       } catch (err) {
         console.warn(err);
       }
@@ -66,7 +64,7 @@ function ConsumptionCalculator({ navigation }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: i18n.t("screenName") });
-  }, [isFocused]);
+  }, [langulage]);
 
   // useLayoutEffect(() => {
   //   // i18n.locale = langulage;
