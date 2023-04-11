@@ -1,31 +1,29 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import Button from "../UI/Button";
 
 import { Colors } from "../../constants/colors";
 
-import { deleteVehicle } from "../../util/database";
+import { useSelector } from "react-redux";
+
+import i18n from "i18n-js";
+
+import { en } from "../../translations/translation-en";
+import { bg } from "../../translations/translation-bg";
 
 function DropdownItem({ item, onDelete, onEdit }) {
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
+
   function editItemHandler() {
     onEdit(item);
   }
 
   function DeleteItemHandler() {
-    Alert.alert(
-      "Delete Confurmation",
-      "Are you sure? The item and all of it's data will be deleted!",
-      [
-        { text: "Cancel" },
-        {
-          text: "Delete",
-          onPress: () => {
-            onDelete(item);
-            deleteVehicle(item);
-          },
-        },
-      ]
-    );
+    onDelete(item);
   }
 
   return (
@@ -35,8 +33,8 @@ function DropdownItem({ item, onDelete, onEdit }) {
           <Text style={styles.text}>{item}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Button onPress={editItemHandler}>Edit</Button>
-          <Button onPress={DeleteItemHandler}>Delete</Button>
+          <Button onPress={editItemHandler}>{i18n.t("editButton")}</Button>
+          <Button onPress={DeleteItemHandler}>{i18n.t("deleteButton")}</Button>
         </View>
       </View>
     </View>

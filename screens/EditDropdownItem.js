@@ -10,9 +10,14 @@ import { Vehicle } from "../models/vehicle";
 import { insertVehicleData, updateVehicleName } from "../util/database";
 import { formatDate } from "../util/datetime";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { store } from "../store/store";
 import { addVehicle, updateVehicle } from "../store/vehicleOperations";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
 
 function EditDropdownItem({ navigation }) {
   const vehiche = store.getState().vehiche.vehicle;
@@ -27,10 +32,15 @@ function EditDropdownItem({ navigation }) {
     },
   });
   const dispatch = useDispatch();
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: !oldName ? "Add Vehicle" : "Edit Vehicle",
+      title: !oldName ? i18n.t("addVehicleTitle") : i18n.t("editVehicleTitle"),
     });
   }, [navigation, oldName]);
 
@@ -50,7 +60,7 @@ function EditDropdownItem({ navigation }) {
           newName: {
             value: curInputs.newName.value,
             isValid: false,
-            message: "Name should not be empty string!",
+            message: i18n.t("errorName_AddEditInputMsg"),
           },
         };
       });
@@ -64,7 +74,7 @@ function EditDropdownItem({ navigation }) {
           newName: {
             value: curInputs.newName.value,
             isValid: false,
-            message: "Name already exists! Try another one!",
+            message: i18n.t("errorExists_AddEditInputMsg"),
           },
         };
       });
@@ -83,7 +93,10 @@ function EditDropdownItem({ navigation }) {
 
         dispatch(addVehicle(inputs.newName.value, newVehicle));
 
-        Alert.alert("Add Vehiche", "Vehiche added successfully!");
+        Alert.alert(
+          i18n.t("addVehicleAlertTitle"),
+          i18n.t("addVehicleAlertText")
+        );
 
         navigation.navigate("ConsumptionCalculator");
       } catch (error) {
@@ -109,14 +122,16 @@ function EditDropdownItem({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={[styles.text, invalidFields && styles.invalidLabel]}>
-        {!oldName ? "Type Vehicle Name:" : "Rename Vehicle:"}
+        {!oldName
+          ? `${i18n.t("typeVehicleName")}:`
+          : `${i18n.t("renameVehicle")}:`}
       </Text>
 
       <TextInput
         style={[styles.input, invalidFields && styles.invalidInput]}
         onChangeText={inputChangedHandler.bind(this, "newName")}
         value={inputs.newName.value}
-        placeholder="Vehicle Name"
+        placeholder={i18n.t("placeholderVehicleName")}
         // maxLength={16}
       />
 
@@ -129,8 +144,10 @@ function EditDropdownItem({ navigation }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button onPress={() => navigation.goBack()}>Cancel</Button>
-        <Button onPress={saveHandler}>OK</Button>
+        <Button onPress={() => navigation.goBack()}>
+          {i18n.t("cancelButton")}
+        </Button>
+        <Button onPress={saveHandler}>{i18n.t("saveButton")}</Button>
       </View>
     </View>
   );

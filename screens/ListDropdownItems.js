@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -8,19 +8,35 @@ import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
 
-import { useDispatch } from "react-redux";
+import { deleteVehicle } from "../util/database";
+
+import { useDispatch, useSelector } from "react-redux";
 import { store } from "../store/store";
 import { removeVehicle } from "../store/vehicleOperations";
 import { setVehicleName } from "../store/vehicleObject";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
 
 function ListDropdownItems({ navigation, onEdit, onDelete }) {
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
 
   useLayoutEffect(() => {
     isFocused && setItems(store.getState().vehicleNames.vehicles);
   }, [isFocused]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: i18n.t("listDropdownItemsScreen") });
+  }, [langulage]);
 
   function onEdit(name) {
     dispatch(setVehicleName(name));
@@ -28,8 +44,21 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
   }
 
   function onDelete(name) {
-    dispatch(removeVehicle(name));
-    setItems(store.getState().vehicleNames.vehicles);
+    Alert.alert(
+      i18n.t("deleteVehicleAlertTitle"),
+      i18n.t("deleteVehicleAlertText"),
+      [
+        { text: i18n.t("cancelButton") },
+        {
+          text: i18n.t("deleteButton"),
+          onPress: () => {
+            deleteVehicle(name);
+            dispatch(removeVehicle(name));
+            setItems(store.getState().vehicleNames.vehicles);
+          },
+        },
+      ]
+    );
   }
 
   function addHandler() {
@@ -44,13 +73,13 @@ function ListDropdownItems({ navigation, onEdit, onDelete }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.text}>Dropdown Items:</Text>
+        <Text style={styles.text}>{`${i18n.t("vehicles")}:`}</Text>
 
-        <Button onPress={addHandler}>Add Vehicle</Button>
+        <Button onPress={addHandler}>{i18n.t("addButton")}</Button>
       </View>
 
       {items.length === 0 ? (
-        <Text style={styles.text}>No vehicles found!</Text>
+        <Text style={styles.text}>{i18n.t("noVehiclesFoundMsg")}</Text>
       ) : (
         <FlatList
           data={items}

@@ -129,20 +129,19 @@ export default function App() {
             <Stack.Screen name="SaveConsumption" component={SaveConsumption} />
 
             <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ title: "Settings" }}
-            />
-
-            <Stack.Screen
               name="ListDropdownItems"
               component={ListDropdownItems}
-              options={{ title: "All Dropdown Items" }}
             />
 
             <Stack.Screen
               name="EditDropdownItem"
               component={EditDropdownItem}
+            />
+
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+              options={{ title: "Settings" }}
             />
           </Stack.Navigator>
         </NavigationContainer>
