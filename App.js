@@ -126,11 +126,7 @@ export default function App() {
               options={{ headerShown: false }}
             />
 
-            <Stack.Screen
-              name="SaveConsumption"
-              component={SaveConsumption}
-              options={{ title: "Save Consumption" }}
-            />
+            <Stack.Screen name="SaveConsumption" component={SaveConsumption} />
 
             <Stack.Screen
               name="Settings"

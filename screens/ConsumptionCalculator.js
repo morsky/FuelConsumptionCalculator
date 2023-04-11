@@ -40,8 +40,6 @@ function ConsumptionCalculator({ navigation }) {
   i18n.fallbacks = true;
   i18n.translations = { en, bg };
 
-  console.log(langulage);
-
   useEffect(() => {
     async function loadItems() {
       try {
@@ -63,15 +61,8 @@ function ConsumptionCalculator({ navigation }) {
   }, []);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: i18n.t("screenName") });
+    navigation.setOptions({ title: i18n.t("consumptionCalculatorScreen") });
   }, [langulage]);
-
-  // useLayoutEffect(() => {
-  //   // i18n.locale = langulage;
-  //   console.log(langulage);
-
-  //   navigation.setOptions({ title: i18n.t("screenName") });
-  // }, [isFocused]);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -189,8 +180,9 @@ function ConsumptionCalculator({ navigation }) {
 
       <View style={styles.resultContainer}>
         <Text style={styles.label}>
-          {i18n.t("litersPer100km")}:{" "}
-          {fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)}
+          {`${i18n.t("litersPer100km")}: ${
+            fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)
+          }`}
         </Text>
       </View>
 
