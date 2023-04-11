@@ -9,36 +9,35 @@ import {
 
 import { useState, useLayoutEffect } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import DropDownPicker from "react-native-dropdown-picker";
+
+import { Colors } from "../constants/colors";
+
+import Button from "../components/UI/Button";
+
+import { getVehicleNames } from "../util/database";
+
+import { useDispatch, useSelector } from "react-redux";
+import { getAllVehicles } from "../store/vehicleOperations";
+import { setLangulage } from "../store/langulage";
 
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import * as SQLite from "expo-sqlite";
 
-import { Colors } from "../constants/colors";
-
-import { getVehicleNames } from "../util/database";
-
-import { getAllVehicles } from "../store/vehicleOperations";
-import { setLangulage } from "../store/langulage";
-
-import Button from "../components/UI/Button";
-
 import i18n from "i18n-js";
+
 import { en } from "../translations/translation-en";
 import { bg } from "../translations/translation-bg";
 
-const LOCATION_NOT_WRITABLE =
-  "Location not writable! Please try another location!";
-const DB_EXPORT_SUCCESSFUL = "Exported DB successfully!";
+const LOCATION_NOT_WRITABLE = i18n.t("locationNotWritableAlertText");
+const DB_EXPORT_SUCCESSFUL = i18n.t("locationNotWritableAlertText");
 const DB_NAME = "fuel_consumption.db";
 
-function Settings({ route }) {
+function Settings({ navigation, route }) {
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
   });
@@ -48,17 +47,16 @@ function Settings({ route }) {
     { label: "English", value: "en-US" },
     { label: "Български", value: "bg-BG" },
   ]);
-  let [locale, setLocale] = useState("");
   const dispatch = useDispatch();
-  const langulage = useSelector((state) => state.langulage);
+  const langulage = useSelector((state) => state.langulage)?.langulage;
 
+  i18n.locale = langulage;
   i18n.fallbacks = true;
   i18n.translations = { en, bg };
-  i18n.locale = locale;
 
   useLayoutEffect(() => {
-    setLocale(langulage.langulage);
-  });
+    navigation.setOptions({ title: i18n.t("settingsScreen") });
+  }, [langulage]);
 
   async function exportDB() {
     if (Platform.OS === "android") {
@@ -82,12 +80,15 @@ function Settings({ route }) {
             encoding: FileSystem.EncodingType.Base64,
           });
 
-          Alert.alert("Export DB", DB_EXPORT_SUCCESSFUL);
+          Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
         } else {
-          Alert.alert("Export DB", "Exporting DB terinated!");
+          Alert.alert(
+            i18n.t("exportDBAlertTitle"),
+            i18n.t("exportDBTerminatedAlertTitle")
+          );
         }
       } catch (err) {
-        Alert.alert("Export DB", LOCATION_NOT_WRITABLE);
+        Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
       }
     } else {
       try {
@@ -95,9 +96,9 @@ function Settings({ route }) {
           FileSystem.documentDirectory + `SQLite/${DB_NAME}`
         );
 
-        Alert.alert("Export DB", DB_EXPORT_SUCCESSFUL);
+        Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
       } catch (err) {
-        Alert.alert("Export DB", LOCATION_NOT_WRITABLE);
+        Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
       }
     }
   }
@@ -137,17 +138,23 @@ function Settings({ route }) {
 
         dispatch(getAllVehicles(vehicles));
 
-        Alert.alert("Import DB", "DB imported successfully!");
+        Alert.alert(
+          i18n.t("importDBAlertTitle"),
+          i18n.t("dbImportedSuccessfullyAlertText")
+        );
       }
     } catch (err) {
-      Alert.alert("Something went wrong! Please, try again!");
+      Alert.alert(
+        i18n.t("importDBAlertTitle"),
+        i18n.t("somethingWentWrongAlertText")
+      );
     }
   }
 
   function selectedItemHandler(langulage) {
     const lang = langulage.value;
 
-    setLocale(lang);
+    i18n.locale = lang;
     storeData("langulage", lang);
     dispatch(setLangulage(lang));
   }
@@ -198,7 +205,7 @@ function Settings({ route }) {
     <View style={styles.container}>
       <View style={styles.itemContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>Set Items Per Page</Text>
+          <Text style={styles.inputText}>{i18n.t("setItemsPerPage")}</Text>
 
           <TextInput
             style={[styles.input, !inputs.itemsPerPage.isValid && styles.error]}
@@ -210,26 +217,26 @@ function Settings({ route }) {
           />
         </View>
 
-        <Text style={styles.text}>To view all data set Items Per Page = 0</Text>
+        <Text style={styles.text}>{i18n.t("setItemsPerPageText")}</Text>
       </View>
 
       <View style={styles.itemContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>Export Data</Text>
+          <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
           <Button onPress={exportDB}>Export</Button>
         </View>
       </View>
 
       <View style={styles.itemContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>Import Data</Text>
+          <Text style={styles.inputText}>{i18n.t("importData")}</Text>
           <Button onPress={importDB}>Import</Button>
         </View>
       </View>
 
       <View style={styles.itemContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>Change langulage</Text>
+          <Text style={styles.inputText}>{i18n.t("changeLangulage")}</Text>
         </View>
 
         <View style={styles.dropdown}>

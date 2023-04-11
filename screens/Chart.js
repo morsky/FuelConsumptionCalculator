@@ -1,20 +1,27 @@
 import { useEffect, useState, useLayoutEffect } from "react";
+
 import { View, Text, StyleSheet } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import DropDownPicker from "react-native-dropdown-picker";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "../constants/colors";
 
 import IconButton from "../components/UI/IconButton";
 import DrawChart from "../components/Chart/DrawChart";
 
+import { useSelector } from "react-redux";
 import { store } from "../store/store";
-
 import { getVehicleData } from "../util/database";
 import { formatDateForLabels } from "../util/datetime";
-import { Colors } from "../constants/colors";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
 
 const CHART_MAX_ELEMENTS = 6;
 let page = 1;
@@ -27,6 +34,11 @@ function Chart({ navigation }) {
   const [data, setData] = useState({});
   const isFocused = useIsFocused();
   const [itemsPerPage, setItemsPerPage] = useState(0);
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
 
   useEffect(() => {
     async function getItemsPerPage() {
@@ -41,6 +53,10 @@ function Chart({ navigation }) {
 
     isFocused && getItemsPerPage();
   }, [isFocused]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: i18n.t("chartScreen") });
+  }, [langulage]);
 
   useLayoutEffect(() => {
     function loadItems() {
@@ -173,7 +189,7 @@ function Chart({ navigation }) {
           labelStyle={{
             fontWeight: "bold",
           }}
-          placeholder="Select a vehicle"
+          placeholder={i18n.t("saveConsumptionDropdown")}
           onSelectItem={(item) => {
             selectedItemHandler(item, "");
           }}
@@ -182,7 +198,7 @@ function Chart({ navigation }) {
 
       <View>
         {Object.keys(data).length === 0 ? (
-          <Text style={styles.chartText}>Chart View</Text>
+          <Text style={styles.chartText}>{i18n.t("chartView")}</Text>
         ) : (
           <>
             <DrawChart data={data} />

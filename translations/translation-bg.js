@@ -4,6 +4,8 @@ const bg = {
   saveConsumptionScreen: "Запазване на разход",
   listDropdownItemsScreen: "Всички превозни срества",
   splitBillScreen: "Споделяне на сметка",
+  chartScreen: "Графика на консумацията",
+  settingsScreen: "Настройки",
 
   // Screen Title
   addVehicleTitle: "Добавяне на превозно средство",
@@ -36,6 +38,13 @@ const bg = {
   enterCost: "Сметка",
   enterPerson: "Хора",
   costPerPerson: "Цена на човек",
+  chartView: "Графика",
+  setItemsPerPage: "Брой елементи на страница",
+  setItemsPerPageText:
+    "За да видите всички данни, задайте брой елементи на страница = 0",
+  exportData: "Запазване на Базата Данни",
+  importData: "Възстановяване на Базата Данни",
+  changeLangulage: "Смяна на езика",
 
   // Dropdown Placeholder
   saveConsumptionDropdown: "Превозно средство",
@@ -46,6 +55,14 @@ const bg = {
   deleteVehicleAlertTitle: "Потвърждение за изтриване",
   deleteVehicleAlertText:
     "Сигурни ли сте? Елементът и всички негови данни ще бъдат изтрити!",
+  exportDBAlertTitle: "Запазване на Базата Данни",
+  importDBAlertTitle: "Възстановяване на Базата Данни",
+  exportDBTerminatedAlertTitle: "Запазване на Базата Данни е прекратено!",
+  locationNotWritableAlertText:
+    "Папката е само за четене! Моля, опитайте да запишите файла на друго мято!",
+  dbExportSuccessfulAlertText: "Базата данние е успешно съхранена!",
+  dbImportedSuccessfullyAlertText: "Базата данние е успешно възстановена!",
+  somethingWentWrongAlertText: "Нещо се обърка! Моля, опитайте отново!",
 
   // Error Messages
   errorInputsMsg:

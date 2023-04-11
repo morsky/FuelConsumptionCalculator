@@ -4,6 +4,8 @@ const en = {
   saveConsumptionScreen: "Save Consumption",
   listDropdownItemsScreen: "All Vehicles",
   splitBillScreen: "Split Bill",
+  chartScreen: "Fuel Consumption Chart",
+  settingsScreen: "Settings",
 
   // Screen Title
   addVehicleTitle: "Add Vehicle",
@@ -36,6 +38,12 @@ const en = {
   enterCost: "Enter cost",
   enterPerson: "Enter persons",
   costPerPerson: "Cost per person",
+  chartView: "Chart View",
+  setItemsPerPage: "Set Items Per Page",
+  setItemsPerPageText: "To view all data set Items Per Page = 0",
+  exportData: "Export Data",
+  importData: "Import Data",
+  changeLangulage: "Change langulage",
 
   // Dropdown Placeholder
   saveConsumptionDropdown: "Select a vehicle",
@@ -46,6 +54,14 @@ const en = {
   deleteVehicleAlertTitle: "Delete Confurmation",
   deleteVehicleAlertText:
     "Are you sure? The item and all of it's data will be deleted!",
+  exportDBAlertTitle: "Export DB",
+  importDBAlertTitle: "Import DB",
+  exportDBTerminatedAlertTitle: "Exporting DB terinated!",
+  locationNotWritableAlertText:
+    "Location not writable! Please try another location!",
+  dbExportSuccessfulAlertText: "DB exported successfully!",
+  dbImportedSuccessfullyAlertText: "DB imported successfully!",
+  somethingWentWrongAlertText: "Something went wrong! Please, try again!",
 
   // Error Messages
   errorInputsMsg: "Invalid input values - please check your entered data!",

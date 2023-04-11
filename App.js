@@ -65,7 +65,6 @@ function CalculatorOverview() {
         name="Chart"
         component={Chart}
         options={{
-          title: "Fuel Consumption Chart",
           tabBarIcon: ({ color }) => (
             <Ionicons name="bar-chart" size={32} color={color} />
           ),
@@ -138,11 +137,7 @@ export default function App() {
               component={EditDropdownItem}
             />
 
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ title: "Settings" }}
-            />
+            <Stack.Screen name="Settings" component={Settings} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
