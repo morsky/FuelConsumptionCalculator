@@ -28,7 +28,7 @@ const bg = {
   deleteButton: "Изтриване",
 
   // Text
-  litersPer100km: "л / 100км",
+  litersPer100km: "л / 100 км",
   consumption: "Разход",
   unit: "л / км",
   vehicles: "Превозни средства",

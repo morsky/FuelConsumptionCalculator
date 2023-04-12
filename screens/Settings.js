@@ -13,6 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import DropDownPicker from "react-native-dropdown-picker";
 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import { Colors } from "../constants/colors";
 
 import Button from "../components/UI/Button";
@@ -221,15 +223,39 @@ function Settings({ navigation, route }) {
       </View>
 
       <View style={styles.itemContainer}>
-        <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
+        <View style={styles.dbContainer}>
+          <View style={styles.dbText}>
+            <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
+          </View>
 
-        <Button onPress={exportDB}>Export</Button>
+          <View style={styles.dbButton}>
+            <Button onPress={exportDB}>
+              <MaterialCommunityIcons
+                name="database-export"
+                size={24}
+                color="white"
+              />
+            </Button>
+          </View>
+        </View>
       </View>
 
       <View style={styles.itemContainer}>
-        <Text style={styles.inputText}>{i18n.t("importData")}</Text>
+        <View style={styles.dbContainer}>
+          <View style={styles.dbText}>
+            <Text style={styles.inputText}>{i18n.t("importData")}</Text>
+          </View>
 
-        <Button onPress={importDB}>Import</Button>
+          <View style={styles.dbButton}>
+            <Button onPress={importDB}>
+              <MaterialCommunityIcons
+                name="database-import"
+                size={24}
+                color="white"
+              />
+            </Button>
+          </View>
+        </View>
       </View>
 
       <View style={styles.itemContainer}>
@@ -289,6 +315,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     paddingHorizontal: 10,
     paddingVertical: 2,
+    marginVertical: 10,
     minWidth: 60,
   },
   inputText: {
@@ -297,7 +324,6 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.gray700,
     textAlign: "center",
-    marginTop: 5,
     marginHorizontal: 10,
   },
   error: {
@@ -307,5 +333,18 @@ const styles = StyleSheet.create({
   dropdown: {
     marginVertical: 10,
     width: "60%",
+  },
+  dbContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
+  dbText: {
+    flex: 1,
+    alignItems: "center",
+  },
+  dbButton: {
+    marginHorizontal: 10,
   },
 });
