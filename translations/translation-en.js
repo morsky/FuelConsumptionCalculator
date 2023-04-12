@@ -59,7 +59,7 @@ const en = {
   exportDBTerminatedAlertTitle: "Exporting DB terinated!",
   locationNotWritableAlertText:
     "Location not writable! Please try another location!",
-  dbExportSuccessfulAlertText: "DB exported successfully!",
+  dbExportSuccessfullyAlertText: "DB exported successfully!",
   dbImportedSuccessfullyAlertText: "DB imported successfully!",
   somethingWentWrongAlertText: "Something went wrong! Please, try again!",
 

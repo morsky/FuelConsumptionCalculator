@@ -35,11 +35,11 @@ import i18n from "i18n-js";
 import { en } from "../translations/translation-en";
 import { bg } from "../translations/translation-bg";
 
-const LOCATION_NOT_WRITABLE = i18n.t("locationNotWritableAlertText");
-const DB_EXPORT_SUCCESSFUL = i18n.t("locationNotWritableAlertText");
-const DB_NAME = "fuel_consumption.db";
-
 function Settings({ navigation, route }) {
+  const LOCATION_NOT_WRITABLE = i18n.t("locationNotWritableAlertText");
+  const DB_EXPORT_SUCCESSFUL = i18n.t("dbExportSuccessfullyAlertText");
+  const DB_NAME = "fuel_consumption.db";
+
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
   });
