@@ -118,7 +118,7 @@ function Settings({ route }) {
         Alert.alert("Import DB", "DB imported successfully!");
       }
     } catch (err) {
-      Alert.alert("Something went wrong! Please, try again!");
+      Alert.alert("Import DB", "Something went wrong! Please, try again!");
     }
   }
 
