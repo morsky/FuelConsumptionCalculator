@@ -13,12 +13,16 @@ import { Colors } from "../constants/colors";
 import { Vehicle } from "../models/vehicle";
 
 import { insertVehicleData } from "../util/database";
-
 import { formatDate } from "../util/datetime";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setVehicle } from "../store/vehicleObject";
 import { store } from "../store/store";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
 
 function SaveConsumption({ navigation, route }) {
   const [open, setOpen] = useState(false);
@@ -27,6 +31,11 @@ function SaveConsumption({ navigation, route }) {
   const consumptionValue = route.params.value;
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
 
   useEffect(() => {
     function loadItems() {
@@ -62,6 +71,10 @@ function SaveConsumption({ navigation, route }) {
     });
   }, [navigation, editHandler]);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: i18n.t("saveConsumptionScreen") });
+  }, [langulage]);
+
   async function saveHandler() {
     const dateTime = formatDate(new Date());
     const vehicle = new Vehicle(value, consumptionValue, dateTime);
@@ -84,7 +97,9 @@ function SaveConsumption({ navigation, route }) {
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.text}>
-          Consumption: {consumptionValue.toFixed(2)} l/km
+          {`${i18n.t("consumption")}: ${consumptionValue.toFixed(2)} ${i18n.t(
+            "unit"
+          )}`}
         </Text>
       </View>
 
@@ -102,14 +117,16 @@ function SaveConsumption({ navigation, route }) {
           labelStyle={{
             fontWeight: "bold",
           }}
-          placeholder="Select a vehicle"
+          placeholder={i18n.t("saveConsumptionDropdown")}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button onPress={() => navigation.goBack()}>Cancel</Button>
+        <Button onPress={() => navigation.goBack()}>
+          {i18n.t("cancelButton")}
+        </Button>
         <Button style={styles.button} onPress={saveHandler} disabled={!value}>
-          Save
+          {i18n.t("saveButton")}
         </Button>
       </View>
     </View>

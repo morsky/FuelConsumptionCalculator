@@ -18,6 +18,7 @@ export const Colors = {
 
   // Screen background
   orange50: "#fdd2a4",
+
   orange300: "#fdc59b",
   orange700: "#fb8c00",
   orange800: "#fa7914",

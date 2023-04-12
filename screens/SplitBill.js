@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
+
 import { View, Text, TextInput, StyleSheet, Keyboard } from "react-native";
+
+import { Colors } from "../constants/colors";
 
 import Button from "../components/UI/Button";
 
 import { calculatePricePerPerson } from "../util/calculations";
-import { Colors } from "../constants/colors";
 
-function SplitBill() {
+import { useSelector } from "react-redux";
+
+import i18n from "i18n-js";
+
+import { en } from "../translations/translation-en";
+import { bg } from "../translations/translation-bg";
+
+function SplitBill({ navigation }) {
   const [inputs, setInputs] = useState({
     cost: {
       value: "",
@@ -18,6 +27,15 @@ function SplitBill() {
     },
   });
   const [fuelConsumption, setFuelConsumption] = useState(0);
+  const langulage = useSelector((state) => state.langulage)?.langulage;
+
+  i18n.locale = langulage;
+  i18n.fallbacks = true;
+  i18n.translations = { en, bg };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: i18n.t("splitBillScreen") });
+  }, [langulage]);
 
   function inputChangedHandler(inputIdentifier, enteredValue) {
     setInputs((curInputs) => {
@@ -78,7 +96,7 @@ function SplitBill() {
         <Text
           style={[styles.label, !inputs.cost.isValid && styles.invalidLabel]}
         >
-          Enter cost:
+          {`${i18n.t("enterCost")}:`}
         </Text>
         <TextInput
           style={[styles.input, !inputs.cost.isValid && styles.invalidInput]}
@@ -93,7 +111,7 @@ function SplitBill() {
         <Text
           style={[styles.label, !inputs.persons.isValid && styles.invalidLabel]}
         >
-          Enter persons:
+          {`${i18n.t("enterPerson")}:`}
         </Text>
         <TextInput
           style={[styles.input, !inputs.persons.isValid && styles.invalidInput]}
@@ -106,25 +124,24 @@ function SplitBill() {
 
       <View style={styles.errorContainer}>
         {invalidFields && (
-          <Text style={styles.errorText}>
-            Invalid input values - please check your entered data!
-          </Text>
+          <Text style={styles.errorText}>{i18n.t("errorInputsMsg")}</Text>
         )}
       </View>
 
       <View style={styles.buttons}>
         <Button style={styles.button} onPress={clearHandler}>
-          Clear
+          {i18n.t("clearButton")}
         </Button>
         <Button style={styles.button} onPress={calculateHandler}>
-          Calculate
+          {i18n.t("calculateButton")}
         </Button>
       </View>
 
       <View style={styles.resultContainer}>
         <Text style={styles.label}>
-          Cost per person:{" "}
-          {fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)}
+          {`${i18n.t("costPerPerson")}: ${
+            fuelConsumption === 0 ? fuelConsumption : fuelConsumption.toFixed(2)
+          }`}
         </Text>
       </View>
     </View>
@@ -164,7 +181,7 @@ const styles = StyleSheet.create({
     minWidth: 120,
   },
   errorContainer: {
-    height: 30,
+    height: 40,
     marginTop: 20,
   },
   errorText: {

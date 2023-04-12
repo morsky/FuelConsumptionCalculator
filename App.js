@@ -46,7 +46,6 @@ function CalculatorOverview() {
         name="ConsumptionCalculator"
         component={ConsumptionCalculator}
         options={{
-          title: "Consumption Calculator",
           tabBarIcon: ({ color }) => (
             <Ionicons name="calculator" size={36} color={color} />
           ),
@@ -66,7 +65,6 @@ function CalculatorOverview() {
         name="Chart"
         component={Chart}
         options={{
-          title: "Fuel Consumption Chart",
           tabBarIcon: ({ color }) => (
             <Ionicons name="bar-chart" size={32} color={color} />
           ),
@@ -127,28 +125,19 @@ export default function App() {
               options={{ headerShown: false }}
             />
 
-            <Stack.Screen
-              name="SaveConsumption"
-              component={SaveConsumption}
-              options={{ title: "Save Consumption" }}
-            />
-
-            <Stack.Screen
-              name="Settings"
-              component={Settings}
-              options={{ title: "Settings" }}
-            />
+            <Stack.Screen name="SaveConsumption" component={SaveConsumption} />
 
             <Stack.Screen
               name="ListDropdownItems"
               component={ListDropdownItems}
-              options={{ title: "All Dropdown Items" }}
             />
 
             <Stack.Screen
               name="EditDropdownItem"
               component={EditDropdownItem}
             />
+
+            <Stack.Screen name="Settings" component={Settings} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
