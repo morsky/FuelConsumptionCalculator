@@ -60,8 +60,8 @@ const bg = {
   exportDBTerminatedAlertTitle: "Запазване на Базата Данни е прекратено!",
   locationNotWritableAlertText:
     "Папката е само за четене! Моля, опитайте да запишите файла на друго мято!",
-  dbExportSuccessfulAlertText: "Базата данние е успешно съхранена!",
-  dbImportedSuccessfullyAlertText: "Базата данние е успешно възстановена!",
+  dbExportSuccessfullyAlertText: "Базата данни е успешно съхранена!",
+  dbImportedSuccessfullyAlertText: "Базата данни е успешно възстановена!",
   somethingWentWrongAlertText: "Нещо се обърка! Моля, опитайте отново!",
 
   // Error Messages
