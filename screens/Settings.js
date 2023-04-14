@@ -15,6 +15,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import Constants from "expo-constants";
+
 import { Colors } from "../constants/colors";
 
 import Button from "../components/UI/Button";
@@ -282,6 +284,12 @@ function Settings({ navigation, route }) {
           />
         </View>
       </View>
+
+      <View style={styles.versionContainer}>
+        <Text style={styles.versionText}>
+          Application version: {Constants.manifest.version}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -346,5 +354,18 @@ const styles = StyleSheet.create({
   },
   dbButton: {
     marginHorizontal: 10,
+  },
+  versionContainer: {
+    backgroundColor: Colors.orange800,
+    padding: 10,
+    alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+  },
+  versionText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "white",
   },
 });
