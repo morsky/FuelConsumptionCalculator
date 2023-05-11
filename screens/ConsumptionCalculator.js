@@ -1,11 +1,12 @@
 import { useEffect, useState, useLayoutEffect } from "react";
 
-import { View, Text, TextInput, StyleSheet, Keyboard } from "react-native";
+import { View, Text, StyleSheet, Keyboard } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
 
 import { Colors } from "../constants/colors";
@@ -127,41 +128,29 @@ function ConsumptionCalculator({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text
-          style={[
-            styles.label,
-            !inputs.kilometers.isValid && styles.invalidLabel,
-          ]}
-        >
-          {i18n.t("kilometersInput")}
-        </Text>
-        <TextInput
-          style={[
-            styles.input,
-            !inputs.kilometers.isValid && styles.invalidInput,
-          ]}
-          onChangeText={inputChangedHandler.bind(this, "kilometers")}
-          placeholder="0"
-          keyboardType="numeric"
-          value={inputs.kilometers.value}
-        />
-      </View>
+      <Input
+        label={i18n.t("kilometersInput")}
+        invalid={!inputs.kilometers.isValid}
+        textInputConfig={{
+          onChangeText: inputChangedHandler.bind(this, "kilometers"),
+          placeholder: "0",
+          keyboardType: "numeric",
+          value: inputs.kilometers.value,
+          maxLength: 10,
+        }}
+      />
 
-      <View style={styles.inputContainer}>
-        <Text
-          style={[styles.label, !inputs.liters.isValid && styles.invalidLabel]}
-        >
-          {i18n.t("litersInput")}
-        </Text>
-        <TextInput
-          style={[styles.input, !inputs.liters.isValid && styles.invalidInput]}
-          onChangeText={inputChangedHandler.bind(this, "liters")}
-          placeholder="0"
-          keyboardType="numeric"
-          value={inputs.liters.value}
-        />
-      </View>
+      <Input
+        label={i18n.t("litersInput")}
+        invalid={!inputs.liters.isValid}
+        textInputConfig={{
+          onChangeText: inputChangedHandler.bind(this, "liters"),
+          placeholder: "0",
+          keyboardType: "numeric",
+          value: inputs.liters.value,
+          maxLength: 10,
+        }}
+      />
 
       <View style={styles.errorContainer}>
         {invalidFields && (
@@ -170,7 +159,10 @@ function ConsumptionCalculator({ navigation }) {
       </View>
 
       <View style={styles.buttons}>
-        <Button style={styles.button} onPress={clearHandler}>
+        <Button
+          style={[styles.button, styles.buttonClear]}
+          onPress={clearHandler}
+        >
           {i18n.t("clearButton")}
         </Button>
         <Button style={styles.button} onPress={calculateHandler}>
@@ -204,31 +196,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.yellow100,
     paddingTop: 40,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginHorizontal: 20,
-    marginTop: 10,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.gray700,
-  },
-  input: {
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: Colors.gray100,
-    backgroundColor: Colors.yellow50,
-    color: Colors.gray700,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "right",
-    padding: 6,
-    marginRight: 20,
-    minWidth: 120,
-  },
   errorContainer: {
     height: 40,
     marginTop: 20,
@@ -237,12 +204,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Colors.error200,
   },
-  invalidLabel: {
-    color: Colors.error200,
-  },
-  invalidInput: {
-    backgroundColor: Colors.error50,
-    borderColor: Colors.error300,
+  label: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.gray700,
   },
   buttons: {
     flexDirection: "row",
@@ -253,6 +218,9 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8,
+  },
+  buttonClear: {
+    backgroundColor: Colors.orange800,
   },
   resultContainer: {
     justifyContent: "center",

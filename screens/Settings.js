@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Platform,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, Alert } from "react-native";
 
 import { useState, useLayoutEffect } from "react";
 
@@ -19,6 +12,7 @@ import Constants from "expo-constants";
 
 import { Colors } from "../constants/colors";
 
+import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
 
 import { getVehicleNames } from "../util/database";
@@ -208,18 +202,21 @@ function Settings({ navigation, route }) {
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputText}>{i18n.t("setItemsPerPage")}</Text>
-
-          <TextInput
-            style={[styles.input, !inputs.itemsPerPage.isValid && styles.error]}
-            defaultValue={inputs.itemsPerPage.value.toString()}
-            keyboardType="numeric"
-            onChangeText={inputChangedHandler.bind(this, "itemsPerPage")}
-            onSubmitEditing={checkIUserInput}
-            maxLength={3}
-          />
-        </View>
+        <Input
+          containerStyle={styles.inputContainer}
+          textStyle={styles.inputText}
+          inputStyle={styles.inputElement}
+          label={i18n.t("setItemsPerPage")}
+          invalid={!inputs.itemsPerPage.isValid}
+          textInputConfig={{
+            defaultValue: inputs.itemsPerPage.value.toString(),
+            onChangeText: inputChangedHandler.bind(this, "itemsPerPage"),
+            onSubmitEditing: checkIUserInput,
+            placeholder: "0",
+            keyboardType: "numeric",
+            maxLength: 3,
+          }}
+        />
 
         <Text style={styles.text}>{i18n.t("setItemsPerPageText")}</Text>
       </View>
@@ -227,7 +224,7 @@ function Settings({ navigation, route }) {
       <View style={styles.itemContainer}>
         <View style={styles.dbContainer}>
           <View style={styles.dbText}>
-            <Text style={styles.inputText}>{i18n.t("exportData")}</Text>
+            <Text style={styles.itemText}>{i18n.t("exportData")}</Text>
           </View>
 
           <View style={styles.dbButton}>
@@ -245,7 +242,7 @@ function Settings({ navigation, route }) {
       <View style={styles.itemContainer}>
         <View style={styles.dbContainer}>
           <View style={styles.dbText}>
-            <Text style={styles.inputText}>{i18n.t("importData")}</Text>
+            <Text style={styles.itemText}>{i18n.t("importData")}</Text>
           </View>
 
           <View style={styles.dbButton}>
@@ -261,7 +258,7 @@ function Settings({ navigation, route }) {
       </View>
 
       <View style={styles.itemContainer}>
-        <Text style={styles.inputText}>{i18n.t("changeLangulage")}</Text>
+        <Text style={styles.itemText}>{i18n.t("changeLangulage")}</Text>
 
         <View style={styles.dropdown}>
           <DropDownPicker
@@ -309,34 +306,25 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange300,
     padding: 5,
   },
-  inputContainer: {
-    alignItems: "center",
-  },
-  input: {
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: Colors.gray100,
-    backgroundColor: Colors.yellow50,
-    color: Colors.gray700,
+  itemText: {
     fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "right",
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    marginVertical: 10,
-    minWidth: 60,
+  },
+  inputContainer: {
+    width: "100%",
   },
   inputText: {
-    fontSize: 18,
+    fontWeight: "normal",
+    color: "black",
+    marginLeft: 10,
+  },
+  inputElement: {
+    minWidth: 50,
+    marginRight: 30,
   },
   text: {
     color: Colors.gray700,
     textAlign: "center",
-    marginHorizontal: 10,
-  },
-  error: {
-    backgroundColor: Colors.error50,
-    borderColor: Colors.error300,
+    marginTop: 10,
   },
   dropdown: {
     marginVertical: 10,
@@ -346,11 +334,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    marginHorizontal: 10,
+    marginVertical: 6,
   },
   dbText: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
   },
   dbButton: {
     marginHorizontal: 10,

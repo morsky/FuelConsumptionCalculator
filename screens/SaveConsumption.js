@@ -122,7 +122,7 @@ function SaveConsumption({ navigation, route }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button onPress={() => navigation.goBack()}>
+        <Button style={styles.buttonCancel} onPress={() => navigation.goBack()}>
           {i18n.t("cancelButton")}
         </Button>
         <Button style={styles.button} onPress={saveHandler} disabled={!value}>
@@ -161,6 +161,9 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8,
+  },
+  buttonCancel: {
+    backgroundColor: Colors.orange800,
   },
   headerButton: {
     marginRight: -15,
