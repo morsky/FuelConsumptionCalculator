@@ -144,7 +144,7 @@ function EditDropdownItem({ navigation }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button onPress={() => navigation.goBack()}>
+        <Button style={styles.buttonCancel} onPress={() => navigation.goBack()}>
           {i18n.t("cancelButton")}
         </Button>
         <Button onPress={saveHandler}>{i18n.t("saveButton")}</Button>
@@ -179,6 +179,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
+  },
+  buttonCancel: {
+    backgroundColor: Colors.orange800,
   },
   errorContainer: {
     height: 30,
