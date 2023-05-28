@@ -8,8 +8,10 @@ import * as SQLite from "expo-sqlite";
 
 import i18n from "i18n-js";
 
-const LOCATION_NOT_WRITABLE = i18n.t("locationNotWritableAlertText");
-const DB_EXPORT_SUCCESSFUL = i18n.t("dbExportSuccessfullyAlertText");
+const LOCATION_NOT_WRITABLE = "locationNotWritableAlertText";
+const DB_EXPORT_SUCCESSFUL = "dbExportSuccessfullyAlertText";
+const EXPORT_DB_TITLE = "exportDBAlertTitle";
+const IMPORT_DB_TITLE = "importDBAlertTitle";
 const DB_NAME = "fuel_consumption.db";
 
 export async function exportDB() {
@@ -34,15 +36,15 @@ export async function exportDB() {
           encoding: FileSystem.EncodingType.Base64,
         });
 
-        Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
+        Alert.alert(i18n.t(EXPORT_DB_TITLE), i18n.t(DB_EXPORT_SUCCESSFUL));
       } else {
         Alert.alert(
-          i18n.t("exportDBAlertTitle"),
+          i18n.t(EXPORT_DB_TITLE),
           i18n.t("exportDBTerminatedAlertTitle")
         );
       }
     } catch (err) {
-      Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
+      Alert.alert(i18n.t(EXPORT_DB_TITLE), i18n.t(LOCATION_NOT_WRITABLE));
     }
   } else {
     try {
@@ -50,9 +52,9 @@ export async function exportDB() {
         FileSystem.documentDirectory + `SQLite/${DB_NAME}`
       );
 
-      Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
+      Alert.alert(i18n.t(EXPORT_DB_TITLE), i18n.t(DB_EXPORT_SUCCESSFUL));
     } catch (err) {
-      Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
+      Alert.alert(i18n.t(EXPORT_DB_TITLE), LOCATION_NOT_WRITABLE);
     }
   }
 }
@@ -87,19 +89,16 @@ export async function importDB() {
       SQLite.openDatabase(DB_NAME);
 
       Alert.alert(
-        i18n.t("importDBAlertTitle"),
+        i18n.t(IMPORT_DB_TITLE),
         i18n.t("dbImportedSuccessfullyAlertText")
       );
     } else {
       Alert.alert(
-        i18n.t("importDBAlertTitle"),
+        i18n.t(IMPORT_DB_TITLE),
         i18n.t("importDBTerminatedAlertTitle")
       );
     }
   } catch (err) {
-    Alert.alert(
-      i18n.t("importDBAlertTitle"),
-      i18n.t("somethingWentWrongAlertText")
-    );
+    Alert.alert(i18n.t(IMPORT_DB_TITLE), i18n.t("somethingWentWrongAlertText"));
   }
 }
