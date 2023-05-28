@@ -55,8 +55,9 @@ const en = {
   deleteVehicleAlertText:
     "Are you sure? The item and all of it's data will be deleted!",
   exportDBAlertTitle: "Export DB",
+  exportDBTerminatedAlertTitle: "Exporting DB terminated!",
   importDBAlertTitle: "Import DB",
-  exportDBTerminatedAlertTitle: "Exporting DB terinated!",
+  importDBTerminatedAlertTitle: "Importing DB terminated!",
   locationNotWritableAlertText:
     "Location not writable! Please try another location!",
   dbExportSuccessfullyAlertText: "DB exported successfully!",

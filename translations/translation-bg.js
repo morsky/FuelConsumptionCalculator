@@ -56,8 +56,10 @@ const bg = {
   deleteVehicleAlertText:
     "Сигурни ли сте? Елементът и всички негови данни ще бъдат изтрити!",
   exportDBAlertTitle: "Запазване на Базата Данни",
-  importDBAlertTitle: "Възстановяване на Базата Данни",
   exportDBTerminatedAlertTitle: "Запазване на Базата Данни е прекратено!",
+  importDBAlertTitle: "Възстановяване на Базата Данни",
+  importDBTerminatedAlertTitle:
+    "Възстановяването на Базата Данни е прекратено!",
   locationNotWritableAlertText:
     "Папката е само за четене! Моля, опитайте да запишите файла на друго мято!",
   dbExportSuccessfullyAlertText: "Базата данни е успешно съхранена!",

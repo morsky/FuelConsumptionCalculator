@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Platform, Alert } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { useState, useLayoutEffect } from "react";
 
@@ -15,16 +15,13 @@ import { Colors } from "../constants/colors";
 import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
 
-import { getVehicleNames } from "../util/database";
-
 import { useDispatch, useSelector } from "react-redux";
-import { getAllVehicles } from "../store/vehicleOperations";
-import { setLangulage } from "../store/langulage";
 
-import * as Sharing from "expo-sharing";
-import * as FileSystem from "expo-file-system";
-import * as DocumentPicker from "expo-document-picker";
-import * as SQLite from "expo-sqlite";
+import { setLangulage } from "../store/langulage";
+import { getAllVehicles } from "../store/vehicleOperations";
+
+import { exportDB, importDB } from "../util/databaseBackup";
+import { getVehicleNames } from "../util/database";
 
 import i18n from "i18n-js";
 
@@ -32,10 +29,6 @@ import { en } from "../translations/translation-en";
 import { bg } from "../translations/translation-bg";
 
 function Settings({ navigation, route }) {
-  const LOCATION_NOT_WRITABLE = i18n.t("locationNotWritableAlertText");
-  const DB_EXPORT_SUCCESSFUL = i18n.t("dbExportSuccessfullyAlertText");
-  const DB_NAME = "fuel_consumption.db";
-
   const [inputs, setInputs] = useState({
     itemsPerPage: { value: route.params.pages, isValid: true },
   });
@@ -55,99 +48,6 @@ function Settings({ navigation, route }) {
   useLayoutEffect(() => {
     navigation.setOptions({ title: i18n.t("settingsScreen") });
   }, [langulage]);
-
-  async function exportDB() {
-    if (Platform.OS === "android") {
-      try {
-        const permissions =
-          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-
-        if (permissions.granted) {
-          const base64 = await FileSystem.readAsStringAsync(
-            FileSystem.documentDirectory + `SQLite/${DB_NAME}`,
-            { encoding: FileSystem.EncodingType.Base64 }
-          );
-
-          const uri = await FileSystem.StorageAccessFramework.createFileAsync(
-            permissions.directoryUri,
-            DB_NAME,
-            "application/octet-stream"
-          );
-
-          await FileSystem.writeAsStringAsync(uri, base64, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-
-          Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
-        } else {
-          Alert.alert(
-            i18n.t("exportDBAlertTitle"),
-            i18n.t("exportDBTerminatedAlertTitle")
-          );
-        }
-      } catch (err) {
-        Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
-      }
-    } else {
-      try {
-        await Sharing.shareAsync(
-          FileSystem.documentDirectory + `SQLite/${DB_NAME}`
-        );
-
-        Alert.alert(i18n.t("exportDBAlertTitle"), DB_EXPORT_SUCCESSFUL);
-      } catch (err) {
-        Alert.alert(i18n.t("exportDBAlertTitle"), LOCATION_NOT_WRITABLE);
-      }
-    }
-  }
-
-  async function importDB() {
-    try {
-      let result = await DocumentPicker.getDocumentAsync({
-        copyToCacheDirectory: true,
-      });
-
-      if (result.type === "success") {
-        if (
-          !(
-            await FileSystem.getInfoAsync(
-              FileSystem.documentDirectory + "SQLite"
-            )
-          ).exists
-        ) {
-          await FileSystem.makeDirectoryAsync(
-            FileSystem.documentDirectory + "SQLite"
-          );
-        }
-
-        const base64 = await FileSystem.readAsStringAsync(result.uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-
-        await FileSystem.writeAsStringAsync(
-          FileSystem.documentDirectory + `SQLite/${DB_NAME}`,
-          base64,
-          { encoding: FileSystem.EncodingType.Base64 }
-        );
-
-        SQLite.openDatabase(DB_NAME);
-
-        const vehicles = await getVehicleNames();
-
-        dispatch(getAllVehicles(vehicles));
-
-        Alert.alert(
-          i18n.t("importDBAlertTitle"),
-          i18n.t("dbImportedSuccessfullyAlertText")
-        );
-      }
-    } catch (err) {
-      Alert.alert(
-        i18n.t("importDBAlertTitle"),
-        i18n.t("somethingWentWrongAlertText")
-      );
-    }
-  }
 
   function selectedItemHandler(langulage) {
     const lang = langulage.value;
@@ -199,6 +99,14 @@ function Settings({ navigation, route }) {
     }
   }
 
+  async function importDatabase() {
+    await importDB();
+
+    const vehicles = await getVehicleNames();
+
+    dispatch(getAllVehicles(vehicles));
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -246,7 +154,7 @@ function Settings({ navigation, route }) {
           </View>
 
           <View style={styles.dbButton}>
-            <Button onPress={importDB}>
+            <Button onPress={importDatabase}>
               <MaterialCommunityIcons
                 name="database-import"
                 size={24}
