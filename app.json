@@ -22,16 +22,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.faliko85.FuelConsumptionCalculator"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "cba3ea56-dfb2-4434-87cc-0bfbba7a1763"
-      }
     }
   }
 }
