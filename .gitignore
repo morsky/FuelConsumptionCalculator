@@ -15,4 +15,4 @@ web-build/
 
 # Sensitive data
 app_production.json
-eas.json
+#eas.json
