@@ -1,6 +1,6 @@
 # Fuel Consumption Calculator
 
-This is an Adroid application whitch calculates the average fuel consumption, stores data for each vehicle and displays chart with graphic.
+This is an Android application whitch calculates the average fuel consumption, stores data for each vehicle and displays chart with graphic.
 There is an option for spliting the bill, too.
 
 ## How to install
@@ -31,7 +31,7 @@ For the graph and application setting you can press icon on the top, right corne
 
 There you'll find some fields with options.
 
-- The first one controls how many items ou can see in the chart field. To see all data set this value to zero.
+- The first one controls how many items you can see in the chart. To see all data set this value to zero.
 
 - Second field is to export database on the device filesystem.
 
@@ -41,4 +41,4 @@ There you'll find some fields with options.
 
 - At the bottom is an information about application version.
 
-- To go back press the arrow at the top, left corner of the screen. This will retur you to graph screen.
+- To go back press the arrow at the top, left corner of the screen. This will return you to graph screen.
